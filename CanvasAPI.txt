@@ -1,0 +1,43 @@
+1.) Step 1:Authorize our app (native desktop app) with OAuth
+- Generated your own access token 
+
+on Canvas --> Account --> Profile --> Settings --> Approved Integrations --> Create Access Token (expiration date: never): 
+
+- Type in this URL (add your specific access token after 'access_token'):
+https://canvas.ucsd.edu/api/v1/courses?access_token=
+
+Canvas domain name: canvas.ucsd.edu
+
+2.) Step 2: Make an API request to Canvas
+- Open Command Prompt
+- Type in curl https://canvas.ucsd.edu/api/v1/users/self -H "Authorization: Bearer [insert personal access_token here]"
+
+curl is a simple command line tool used for making URL requests to Canvas API.
+
+- You will receive a response back in JSON format containing your Canvas user info.
+
+
+3.) Step 3: Learn to make requests to the API using other programming languages
+Curl is a great way to get started with the Canvas API, you may find it easier in the long run to make more complex API requests using programming languages like JavaScript and Python.
+
+
+Caveats:
+- We maybe need Admin access on Canvas
+- Documentation hard to follow 
+
+
+
+
+
+URL ontained through live API page:
+http://[Institution Name].infrastructure.com/doc/api/live
+
+
+Throughout the API, objects are referenced by internal IDs. You can also reference objects by SIS ID, by prepending the SIS ID with the name of the SIS field, like sis_course_id:. For instance, to retrieve the list of assignments for a course with SIS ID of A1234:
+/api/v1/courses/sis_course_id:A1234/assignments
+
+POST/PUT requests parameter sent using standard HTML form encoding: 
+the application/x-www-form-urlencoded content type
+
+
+
