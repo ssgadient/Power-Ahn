@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch CommandTester",
+            "request": "launch",
+            "mainClass": "CommandTester",
+            "projectName": "Power-Ahn_49c8842"
+        },
+        {
+            "type": "java",
+            "name": "Launch RuntimeDemo",
+            "request": "launch",
+            "mainClass": "RuntimeDemo",
+            "projectName": "Power-Ahn_49c8842"
+        },
+        {
+            "type": "java",
             "name": "Launch HelloWorldUITest",
             "request": "launch",
             "vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml",

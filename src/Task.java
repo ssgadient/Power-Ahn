@@ -1,7 +1,9 @@
 public class Task {
-    String appData;
+    String taskName;
+    String appID;
 
-    public Task(String appData){
-        this.appData = appData;
+    public Task(String taskName, String appID){
+        this.taskName = taskName;
+        this.appID = appID;
     }
 }
