@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
  
-public class App extends Application {
+public class HelloWorldUITest extends Application {
     public static void main(String[] args) {
         launch(args);
     }

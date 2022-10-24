@@ -6,6 +6,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch HelloWorldUITest",
+            "request": "launch",
+            "vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml",
+            "mainClass": "HelloWorldUITest",
+            "projectName": "Power-Ahn_aeae8038"
+        },
+        {
+            "type": "java",
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "Main",
@@ -16,14 +24,6 @@
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "Launch App",
-            "request": "launch",
-            "vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml",
-            "mainClass": "App",
-            "projectName": "Power-Ahn_aeae8038"
         }
     ]
 }
