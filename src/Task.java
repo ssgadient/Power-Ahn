@@ -43,6 +43,18 @@ public class Task {
         return this.taskName;
     }
 
+    public String getTaskSubject(){
+        return this.taskSubject;
+    }
+
+    public int getTaskPoints(){
+        return this.taskPoints;
+    }
+
+    public String getTaskDetails(){
+        return this.taskDetails;
+    }
+
     public LocalDateTime getDueTime(){
         return this.dueTime;
     }
