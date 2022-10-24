@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch HelloWorldUITest",
+            "request": "launch",
+            "mainClass": "HelloWorldUITest",
+            "projectName": "Power-Ahn_49c8842"
+        },
+        {
+            "type": "java",
             "name": "Launch CommandTester",
             "request": "launch",
             "mainClass": "CommandTester",
