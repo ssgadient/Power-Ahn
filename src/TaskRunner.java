@@ -9,7 +9,7 @@ public class TaskRunner extends TimerTask{
     }
 
     public void run(){
-        String appRunCommand = "explorer shell:Appsfolder\\" + task.appID;
+        String appRunCommand = "explorer shell:Appsfolder\\" + task.getAppID();
         try {
             Process process = Runtime.getRuntime().exec(new String[]{appRunCommand});
         } catch (IOException e) {
