@@ -1,5 +1,11 @@
-
-// Look into JBDC 
+// Connect Java with MySQL driver
+/**
+ * Notes: 
+ * INSERT INTO {table} (attribute a, attribute b) VALUES (a, b)
+ * UPDATE {table} set attribute a = {value} where {condition}
+ * DELETE FROM {table} where {condition}
+ */
+// Java Database Connectivity (JDBC)
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
