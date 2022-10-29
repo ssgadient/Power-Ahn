@@ -4,17 +4,17 @@ import java.io.File;
 import java.time.format.DateTimeFormatter;
 
 public class Task {
-    private String taskName;
-    private String taskSubject;
-    private int taskPoints;
-    private String taskDetails;
-    private LocalDateTime dueTime;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Duration estimatedDuration;
+    public String taskName;
+    public String taskSubject;
+    public int taskPoints;
+    public String taskDetails;
+    public LocalDateTime dueTime;
+    public LocalDateTime startTime;
+    public LocalDateTime endTime;
+    public Duration estimatedDuration;
     // private URL taskLink;
     // private File taskFile;
-    private String appID;
+    public String appID;
 
     // we need a whole bunch of constructors for the many different task creation
     // possibilities

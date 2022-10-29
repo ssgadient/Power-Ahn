@@ -72,14 +72,26 @@ public class TaskDatabase {
 
     /**
      * Create & Insert tasks
+     * Takes Task object as argument
+     * public Task(String taskName, LocalDateTime dueTime, String appID) {
+        // Reformate dueTime to YYYY-MM-DD format
+        DateTimeFormatter reformateDate = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+        dueTime.format(reformateDate);
+
+        task.taskName;
+        task.dueTime = dueTime;
+        task.appID = appID;
+    }
      */
-    public static void insertTask() {
+    public static void insertTask(Task task) {
+        String name = task.taskName;
+
         // Open a connection
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 Statement stmt = conn.createStatement();) {
             // Create Insert Query (taskName, dueDate, appID)
             System.out.println("Inserting records into the table...");
-            String insertCommand = "INSERT INTO Task VALUES ('HUM Essay', 2001-05-01, '12346')";
+            String insertCommand = "INSERT INTO Task VALUES ('task', 2001-05-01, '12346')";
 
             // Execute command
             stmt.executeUpdate(insertCommand);
