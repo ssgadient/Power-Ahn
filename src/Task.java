@@ -1,14 +1,13 @@
 import java.time.*;
-import java.net.URL;
-import java.io.File;
-import java.time.format.DateTimeFormatter;
+// import java.net.URL;
+// import java.io.File;
 
 public class Task {
     public String taskName;
     public String taskSubject;
     public int taskPoints;
     public String taskDetails;
-    public LocalDateTime dueTime;
+    public LocalDateTime deadline;
     public LocalDateTime startTime;
     public LocalDateTime endTime;
     public Duration estimatedDuration;
@@ -19,14 +18,16 @@ public class Task {
     // we need a whole bunch of constructors for the many different task creation
     // possibilities
 
-    public Task(String taskName, LocalDateTime dueTime, String appID) {
-        // Reformate dueTime to YYYY-MM-DD format
-        DateTimeFormatter reformateDate = DateTimeFormatter.ofPattern("YYYY-MM-dd");
-        dueTime.format(reformateDate);
-
+    public Task(String taskName, LocalDateTime deadline, String appID) {
         this.taskName = taskName;
-        this.dueTime = dueTime;
+        this.deadline = deadline;
         this.appID = appID;
+
+        /*
+         * // Reformate dueTime to YYYY-MM-DD format
+         * DateTimeFormatter reformateDate = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+         * this.dueTime.format(reformateDate);
+         */
     }
 
     public Task(String taskName, Duration estimatedDuration) {
@@ -62,7 +63,7 @@ public class Task {
     }
 
     public LocalDateTime getDueTime() {
-        return this.dueTime;
+        return this.deadline;
     }
 
     public LocalDateTime getStartTime() {

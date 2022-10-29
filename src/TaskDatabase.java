@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.LocalDate;
 import java.sql.*;
 
 public class TaskDatabase {
@@ -22,8 +25,8 @@ public class TaskDatabase {
     public static void main(String[] args) throws SQLException {
         // Create SQL database Task:
         // createDatabase("Task");
-        createTable("Tasks");
-        // dropDatabase("Task");
+        // createTable("Tasks");
+        insertTask(new Task("Essay", LocalDateTime.of(2020, 5, 13, 0, 0, 0), "12356"));
 
     }
 
@@ -58,6 +61,7 @@ public class TaskDatabase {
             String createTableCommand = "CREATE TABLE Tasks " +
                     "(taskName VARCHAR(20) not NULL, " +
                     " dueDate DATE, " +
+                    " dueTime TIME, " +
                     " appID VARCHAR(20), " +
                     " PRIMARY KEY ( taskName ))";
 
@@ -73,31 +77,52 @@ public class TaskDatabase {
     /**
      * Create & Insert tasks
      * Takes Task object as argument
-     * public Task(String taskName, LocalDateTime dueTime, String appID) {
-        // Reformate dueTime to YYYY-MM-DD format
-        DateTimeFormatter reformateDate = DateTimeFormatter.ofPattern("YYYY-MM-dd");
-        dueTime.format(reformateDate);
-
-        task.taskName;
-        task.dueTime = dueTime;
-        task.appID = appID;
-    }
+     * 
+     * task.taskName;
+     * task.dueTime = dueTime;
+     * task.appID = appID;
+     * Insert name of task, date, time, appID
      */
     public static void insertTask(Task task) {
-        String name = task.taskName;
+        String taskName = task.taskName;
+        LocalDateTime deadline = task.deadline;
+        String appID = task.getAppID();
+
+        // Locate the location of our 'Task' database where our 'Tasks' table resides.
+        String dataBase = "jdbc:mysql://localhost:3306/Task";
 
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
-            // Create Insert Query (taskName, dueDate, appID)
             System.out.println("Inserting records into the table...");
-            String insertCommand = "INSERT INTO Task VALUES ('task', 2001-05-01, '12346')";
+            // String insertCommand = "INSERT INTO Task VALUES ('task', 2001-05-01,
+            // '12346')";
 
             // Execute command
-            stmt.executeUpdate(insertCommand);
+            // stmt.executeUpdate(insertCommand);
+
+            // Separate LocalDateTime Java object into two parts (date & time):
+            LocalDate localDate = deadline.toLocalDate();
+            LocalTime localTime = deadline.toLocalTime();
+
+            // Reformat into SQL standard format:
+            java.sql.Date dueDate = java.sql.Date.valueOf(localDate);
+            java.sql.Time dueTime = java.sql.Time.valueOf(localTime);
+
+            // Create insert query:
+            String insertQuery = "INSERT INTO Tasks VALUES (?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(insertQuery);
+
+            // Populate query with values:
+            pstmt.setString(1, taskName);
+            pstmt.setDate(2, dueDate);
+            pstmt.setObject(3, dueTime);
+            pstmt.setString(4, appID);
+
+            pstmt.execute();
 
             // Success message:
-            System.out.println("Inserted records into the table...");
+            System.out.println("Rows inserted ....");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -197,6 +222,24 @@ public class TaskDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Drop table
+     */
+    public static void dropTable(String tableName) {
+        String dataBase = "jdbc:mysql://localhost:3306/Task";
+
+        // Open a connection
+        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+                Statement stmt = conn.createStatement();) {
+            String dropQuery = "DROP TABLE " + tableName;
+            stmt.executeUpdate(dropQuery);
+            System.out.println("Table " + tableName + " has been deleted!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
