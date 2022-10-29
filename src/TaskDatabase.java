@@ -21,8 +21,9 @@ public class TaskDatabase {
     // Created a branch called
     public static void main(String[] args) throws SQLException {
         // Create SQL database Task:
-        // databaseCreation("Task");
-        dropDatabase("Task");
+        // createDatabase("Task");
+        createTable("Tasks");
+        // dropDatabase("Task");
 
     }
 
@@ -36,7 +37,7 @@ public class TaskDatabase {
             // Execute SQL command here:
             stmt.executeUpdate(sql);
             // Print success message here:
-            System.out.println("Database Task created successfully...");
+            System.out.println("Database " + database + " created successfully...");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,9 +48,11 @@ public class TaskDatabase {
      * (includes taskName, dueDate, appID)
      * DATE - format YYYY-MM-DD
      **/
-    public static void createTable() {
-        // Open connection
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+    public static void createTable(String tableName) {
+        // This URL redirects to 'Task' database
+        String dataBase = "jdbc:mysql://localhost:3306/Task";
+
+        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
             // Set SQL command:
             String createTableCommand = "CREATE TABLE Tasks " +
@@ -61,7 +64,7 @@ public class TaskDatabase {
             // Execute command
             stmt.executeUpdate(createTableCommand);
             // Success message
-            System.out.println("Created table in given database...");
+            System.out.println("Created " + tableName + " in database...");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -183,4 +186,5 @@ public class TaskDatabase {
             e.printStackTrace();
         }
     }
+
 }
