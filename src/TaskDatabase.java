@@ -23,10 +23,10 @@ public class TaskDatabase {
 
     // Created a branch called
     public static void main(String[] args) throws SQLException {
-        // Create SQL database Task:
-        // createDatabase("Task");
+        // Database 'Task' already created:
         // createTable("Tasks");
-        insertTask(new Task("Essay", LocalDateTime.of(2020, 5, 13, 0, 0, 0), "12356"));
+        // dropTable("Tasks");
+        insertTask(new Task("ImageGenerator", LocalDateTime.of(2022, 10, 28, 23, 59, 59), "2435"));
 
     }
 
