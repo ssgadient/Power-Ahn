@@ -23,21 +23,12 @@ public class TaskDatabase {
 
     // Created a branch called
     public static void main(String[] args) throws SQLException {
-        // Open a connection
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                Statement stmt = conn.createStatement();) {
-            // Set SQL command(s)
-            String sql = "INSERT INTO Registration VALUES (100, 'Zara', 'Ali', 18)";
-
-            // ResultSet rs = stmt.executeUpdate(sql);
-            System.out.println("Database created successfully...");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // Create SQL database Task:
+        databaseCreation();
     }
 
     // Create 'Task' database
-    public void databaseCreation() {
+    public static void databaseCreation() {
         // Open a connection
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 Statement stmt = conn.createStatement();) {
@@ -56,7 +47,7 @@ public class TaskDatabase {
      * Create table 'Tasks' (includes taskName, dueDate, appID)
      * DATE - format YYYY-MM-DD
      **/
-    public void createTable() {
+    public static void createTable() {
         // Open connection
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 Statement stmt = conn.createStatement();) {
@@ -77,9 +68,9 @@ public class TaskDatabase {
     }
 
     /**
-     * Method creates & inserts tasks
+     * Create & Insert tasks
      */
-    public void insertTask() {
+    public static void insertTask() {
         // Open a connection
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 Statement stmt = conn.createStatement();) {
@@ -99,9 +90,9 @@ public class TaskDatabase {
     }
 
     /**
-     * Method reads/selects tasks
+     * Reads & Select tasks
      */
-    public void readTask() {
+    public static void readTask() {
         // Open a connection
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 Statement stmt = conn.createStatement();) {
@@ -115,9 +106,9 @@ public class TaskDatabase {
             // Extract query data from result set
             while (queryResults.next()) {
                 // Retrieve by column name
-                System.out.print("ID: " + queryResults.getString("taskName"));
-                System.out.print(", Age: " + queryResults.getString("dueTime"));
-                System.out.print(", First: " + queryResults.getString("appID"));
+                System.out.print("Task: " + queryResults.getString("taskName"));
+                System.out.print(", Deadline: " + queryResults.getString("dueTime"));
+                System.out.print(", App ID: " + queryResults.getString("appID"));
             }
 
             // Success message:
@@ -129,16 +120,54 @@ public class TaskDatabase {
     }
 
     /**
-     * Method updates/changes tasks
+     * DISCLAIMER: Needs tweaking to account for different number of parameters.
+     * Update tasks
      */
-    public void updateTask() {
+    public static void updateTask() {
+        // Open a connection
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                Statement stmt = conn.createStatement();) {
+            // Update command:
+            String updateCommand = "UPDATE Tasks " +
+                    "SET age = 30 WHERE id in (100, 101)";
+
+            // Execute command:
+            stmt.executeUpdate(updateCommand);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     /**
-     * Method delete tasks
+     * Delete tasks
+     * Parameter: Name of task (taskName) to delete
      */
-    public void deleteTask() {
+    public static void deleteTask(String taskName) {
+        // Open a connection
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                Statement stmt = conn.createStatement();) {
+
+            // Delete command:
+            String deleteCommand = "DELETE FROM Tasks " +
+                    "WHERE taskName = " + taskName;
+            // Execute command:
+            stmt.executeUpdate(deleteCommand);
+            ResultSet queryResults = stmt.executeQuery(deleteCommand);
+
+            // View changes:
+            while (queryResults.next()) {
+                // Retrieve by column name
+                System.out.print("Task: " + queryResults.getString("taskName"));
+                System.out.print(", Deadline: " + queryResults.getString("dueTime"));
+                System.out.print(", App ID: " + queryResults.getString("appID"));
+            }
+
+            // Close query:
+            queryResults.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 }
