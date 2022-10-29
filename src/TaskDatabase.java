@@ -18,33 +18,33 @@ public class TaskDatabase {
     static final String USER = "root"; // Local server user
     static final String PASS = "sanh2001"; // Local server password
 
-    // public Database {
-    // }
-
     // Created a branch called
     public static void main(String[] args) throws SQLException {
         // Create SQL database Task:
-        databaseCreation();
+        // databaseCreation("Task");
+        dropDatabase("Task");
+
     }
 
     // Create 'Task' database
-    public static void databaseCreation() {
+    public static void createDatabase(String database) {
         // Open a connection
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 Statement stmt = conn.createStatement();) {
             // Set SQL command here:
-            String sql = "CREATE DATABASE Task";
+            String sql = "CREATE DATABASE " + database;
             // Execute SQL command here:
             stmt.executeUpdate(sql);
             // Print success message here:
-            System.out.println("Database created successfully...");
+            System.out.println("Database Task created successfully...");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Create table 'Tasks' (includes taskName, dueDate, appID)
+     * Create 'Tasks' table
+     * (includes taskName, dueDate, appID)
      * DATE - format YYYY-MM-DD
      **/
     public static void createTable() {
@@ -168,6 +168,19 @@ public class TaskDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Drop database
+     */
+    public static void dropDatabase(String database) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                Statement stmt = conn.createStatement();) {
+            String sql = "DROP DATABASE " + database;
+            stmt.executeUpdate(sql);
+            System.out.println("Database 'Task' dropped successfully...");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
