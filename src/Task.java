@@ -17,17 +17,10 @@ public class Task {
 
     // we need a whole bunch of constructors for the many different task creation
     // possibilities
-
     public Task(String taskName, LocalDateTime deadline, String appID) {
         this.taskName = taskName;
         this.deadline = deadline;
         this.appID = appID;
-
-        /*
-         * // Reformate dueTime to YYYY-MM-DD format
-         * DateTimeFormatter reformateDate = DateTimeFormatter.ofPattern("YYYY-MM-dd");
-         * this.dueTime.format(reformateDate);
-         */
     }
 
     public Task(String taskName, Duration estimatedDuration) {
