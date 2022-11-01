@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch HelloWorldUITest",
+      "request": "launch",
+      "mainClass": "HelloWorldUITest",
+      "projectName": "Power-Ahn"
+    },
+    {
+      "type": "java",
+      "name": "Launch CommandTester",
+      "request": "launch",
+      "mainClass": "CommandTester",
+      "projectName": "Power-Ahn"
+    },
+    {
+      "type": "java",
       "name": "Launch MainFrame",
       "request": "launch",
       "mainClass": "MainFrame",

@@ -1,1 +1,1 @@
-Get-StartApps > AUMIDs.txt
+Get-StartApps > testing/AUMIDs.txt
