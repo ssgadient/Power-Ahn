@@ -16,6 +16,9 @@ public class Task {
     private String appID;
 
     //we need a whole bunch of constructors for the many different task creation possibilities
+    public Task(String taskName) {
+        this.taskName = taskName;
+    }
 
     public Task(String taskName, LocalDateTime dueTime, String appID){
         this.taskName = taskName;
@@ -73,5 +76,9 @@ public class Task {
 
     public String getAppID(){
         return this.appID;
+    }
+
+    public void showUI() {
+
     }
 }
