@@ -98,8 +98,22 @@ public class MainFrame extends Application {
                         String endTime = tb3.getText();
                         String appName = tb4.getText();
 
+                        HashMap<String, String> appIDs = AUMIDRetriever.getAUMIDs();
+
                         if (taskName.equals("") || startTime.equals("") || endTime.equals("")) {
                             Text errorText = new Text("One or more required \n fields are missing!");
+                            errorText.setX(30); errorText.setY(55);
+                            errorText.setFont(Font.font ("Times New Roman", 16));
+                            errorText.setFill(Color.RED);
+                            Group error = new Group(errorText);
+                            Scene background = new Scene(error, 200, 150);
+                            Stage errorStage = new Stage();
+                            errorStage.setTitle("Error");
+                            errorStage.setScene(background);
+                            errorStage.showAndWait();
+                        }
+                        else if (!appName.equals("") && !appIDs.containsKey(appName)){
+                            Text errorText = new Text("Please enter a \n valid app name!");
                             errorText.setX(30); errorText.setY(55);
                             errorText.setFont(Font.font ("Times New Roman", 16));
                             errorText.setFill(Color.RED);
