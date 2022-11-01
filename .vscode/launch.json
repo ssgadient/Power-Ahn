@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch MainFrame",
+      "request": "launch",
+      "mainClass": "MainFrame",
+      "projectName": "Power-Ahn_49c8842"
+    },
+    {
+      "type": "java",
       "name": "Launch Main",
       "request": "launch",
       "mainClass": "Main",
@@ -13,10 +20,11 @@
     },
     {
       "type": "java",
-      "name": "Launch AUMIDRetriever",
+      "name": "Launch MainFrame",
       "request": "launch",
-      "mainClass": "AUMIDRetriever",
-      "projectName": "Power-Ahn_49c8842"
+      "vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml",
+      "mainClass": "MainFrame",
+      "projectName": "Power-Ahn_aeae8038"
     },
     {
       "type": "java",
