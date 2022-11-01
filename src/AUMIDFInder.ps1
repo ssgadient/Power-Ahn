@@ -1,1 +1,0 @@
-Select-String -Path "AUMIDs.txt" -Pattern "Brave"

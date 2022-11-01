@@ -1,1 +1,0 @@
-Get-StartApps > AUMIDs.txt
