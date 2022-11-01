@@ -80,8 +80,8 @@ public class TaskDatabase {
      * Paramters: String tableName, object of type Task
      */
     public static void insertTask(String tableName, Task task) {
-        String taskName = task.taskName;
-        LocalDateTime deadline = task.deadline;
+        String taskName = task.getTaskName();
+        LocalDateTime deadline = task.getDeadline();
         String appID = task.getAppID();
 
         // Locate the location of our 'Task' database where our 'Tasks' table resides.

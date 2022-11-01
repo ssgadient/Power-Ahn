@@ -3,39 +3,32 @@ import java.time.*;
 // import java.io.File;
 
 public class Task {
-    public String taskName;
-    public String taskSubject;
-    public int taskPoints;
-    public String taskDetails;
-    public LocalDateTime deadline;
-    public LocalDateTime startTime;
-    public LocalDateTime endTime;
-    public Duration estimatedDuration;
+    private String taskName;
+    private Duration estimatedDuration;
+    private String appID;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private String taskDetails;
+    private String taskSubject;
+    private int taskPoints;
+    private LocalDateTime deadline;
     // private URL taskLink;
     // private File taskFile;
-    public String appID;
 
-    //we need a whole bunch of constructors for the many different task creation possibilities
     public Task(String taskName) {
         this.taskName = taskName;
-    }
-
-    public Task(String taskName, LocalDateTime deadline, String appID){
-        this.taskName = taskName;
-        this.deadline = deadline;
-        this.appID = appID;
     }
 
     public Task(String taskName, Duration estimatedDuration) {
         this.taskName = taskName;
         this.estimatedDuration = estimatedDuration;
-    }
-
-    public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime) {
-        this.taskName = taskName;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.estimatedDuration = calculateEstimatedDuration(startTime, endTime);
+        this.appID = null;
+        this.startTime = null;
+        this.endTime = null;
+        this.taskDetails = null;
+        this.taskSubject = null;
+        this.taskPoints = 0;
+        this.deadline = null;
     }
 
     public Duration calculateEstimatedDuration(LocalDateTime start, LocalDateTime end) {
@@ -46,20 +39,12 @@ public class Task {
         return this.taskName;
     }
 
-    public String getTaskSubject() {
-        return this.taskSubject;
+    public Duration getEstimatedDuration() {
+        return estimatedDuration;
     }
 
-    public int getTaskPoints() {
-        return this.taskPoints;
-    }
-
-    public String getTaskDetails() {
-        return this.taskDetails;
-    }
-
-    public LocalDateTime getDueTime() {
-        return this.deadline;
+    public String getAppID() {
+        return this.appID;
     }
 
     public LocalDateTime getStartTime() {
@@ -70,14 +55,22 @@ public class Task {
         return this.endTime;
     }
 
-    public Duration getEstimatedDuration() {
-        return estimatedDuration;
+    public String getTaskDetails() {
+        return this.taskDetails;
     }
 
-    public String getAppID() {
-        return this.appID;
+    public String getTaskSubject() {
+        return this.taskSubject;
     }
 
+    public int getTaskPoints() {
+        return this.taskPoints;
+    }
+
+    public LocalDateTime getDeadline() {
+        return this.deadline;
+    }
+    
     public void showUI() {
 
     }
