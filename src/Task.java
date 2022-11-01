@@ -12,8 +12,8 @@ public class Task {
     private String taskSubject;
     private int taskPoints;
     private LocalDateTime deadline;
-    // private URL taskLink;
-    // private File taskFile;
+    //private URL taskLink;
+    //private File taskFile;
 
     public Task(String taskName) {
         this.taskName = taskName;
@@ -40,7 +40,7 @@ public class Task {
     }
 
     public Duration getEstimatedDuration() {
-        return estimatedDuration;
+        return this.estimatedDuration;
     }
 
     public String getAppID() {
@@ -71,6 +71,42 @@ public class Task {
         return this.deadline;
     }
     
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setEstimatedDuration(Duration estimatedDuration) {
+        this.estimatedDuration = estimatedDuration;
+    }
+
+    public void setAppID(String appID) {
+        this.appID = appID;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setTaskDetails(String taskDetails) {
+        this.taskDetails = taskDetails;
+    }
+
+    public void setTaskSubject(String taskSubject) {
+        this.taskSubject = taskSubject;
+    }
+
+    public void setTaskPoints(int taskPoints) {
+        this.taskPoints = taskPoints;
+    }
+
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
+
     public void showUI() {
 
     }
