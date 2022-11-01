@@ -6,16 +6,23 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Launch HelloWorldUITest",
+      "name": "Launch TaskDatabase",
       "request": "launch",
-      "mainClass": "HelloWorldUITest",
+      "mainClass": "TaskDatabase",
       "projectName": "Power-Ahn"
     },
     {
       "type": "java",
-      "name": "Launch CommandTester",
+      "name": "Launch Main",
       "request": "launch",
-      "mainClass": "CommandTester",
+      "mainClass": "Main",
+      "projectName": "Power-Ahn"
+    },
+    {
+      "type": "java",
+      "name": "Launch HelloWorldUITest",
+      "request": "launch",
+      "mainClass": "HelloWorldUITest",
       "projectName": "Power-Ahn"
     },
     {
