@@ -1,19 +1,19 @@
 import java.time.*;
-import java.net.URL;
-import java.io.File;
+// import java.net.URL;
+// import java.io.File;
 
 public class Task {
-    private String taskName;
-    private String taskSubject;
-    private int taskPoints;
-    private String taskDetails;
-    private LocalDateTime dueTime;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Duration estimatedDuration;
-    //private URL taskLink;
-    //private File taskFile;
-    private String appID;
+    public String taskName;
+    public String taskSubject;
+    public int taskPoints;
+    public String taskDetails;
+    public LocalDateTime deadline;
+    public LocalDateTime startTime;
+    public LocalDateTime endTime;
+    public Duration estimatedDuration;
+    // private URL taskLink;
+    // private File taskFile;
+    public String appID;
 
     //we need a whole bunch of constructors for the many different task creation possibilities
     public Task(String taskName) {
@@ -22,59 +22,59 @@ public class Task {
 
     public Task(String taskName, LocalDateTime dueTime, String appID){
         this.taskName = taskName;
-        this.dueTime = dueTime;
+        this.deadline = deadline;
         this.appID = appID;
     }
 
-    public Task(String taskName, Duration estimatedDuration){
+    public Task(String taskName, Duration estimatedDuration) {
         this.taskName = taskName;
         this.estimatedDuration = estimatedDuration;
     }
 
-    public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime){
+    public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime) {
         this.taskName = taskName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.estimatedDuration = calculateEstimatedDuration(startTime, endTime);
     }
 
-    public Duration calculateEstimatedDuration(LocalDateTime start, LocalDateTime end){
+    public Duration calculateEstimatedDuration(LocalDateTime start, LocalDateTime end) {
         return Duration.between(start, end);
     }
 
-    public String getTaskName(){
+    public String getTaskName() {
         return this.taskName;
     }
 
-    public String getTaskSubject(){
+    public String getTaskSubject() {
         return this.taskSubject;
     }
 
-    public int getTaskPoints(){
+    public int getTaskPoints() {
         return this.taskPoints;
     }
 
-    public String getTaskDetails(){
+    public String getTaskDetails() {
         return this.taskDetails;
     }
 
-    public LocalDateTime getDueTime(){
-        return this.dueTime;
+    public LocalDateTime getDueTime() {
+        return this.deadline;
     }
 
-    public LocalDateTime getStartTime(){
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
-    public Duration getEstimatedDuration(){
+    public Duration getEstimatedDuration() {
         return estimatedDuration;
     }
 
-    public String getAppID(){
+    public String getAppID() {
         return this.appID;
     }
 
