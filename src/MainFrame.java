@@ -24,7 +24,7 @@ public class MainFrame extends Application {
         t.setX(100); t.setY(50);
         t.setFont(Font.font ("Times New Roman", 20));
         t.setFill(Color.BLACK);
-        
+
         Group root = new Group(t);
         List<Button> buttons = createButtons();
         for (Button b: buttons) {
@@ -46,7 +46,7 @@ public class MainFrame extends Application {
         Button createTask = new Button("Create New Task");
         createTask.setLayoutX(600); createTask.setLayoutY(400);
         createTask.setOnAction(new EventHandler<ActionEvent>() {
- 
+
             @Override
             public void handle(ActionEvent event) {
                 Text t1 = new Text("Task name*"); 
@@ -54,7 +54,7 @@ public class MainFrame extends Application {
                 t1.setFont(Font.font("Times New Roman", 14));
                 TextField tb1 = new TextField();
                 tb1.setLayoutX(120); tb1.setLayoutY(60);
-                
+
                 Text t2 = new Text("Start Time*"); 
                 t2.setX(50); t2.setY(125);
                 t2.setFont(Font.font("Times New Roman", 14));
@@ -90,7 +90,7 @@ public class MainFrame extends Application {
                 Stage taskStage = new Stage();
 
                 submit.setOnAction(new EventHandler<ActionEvent>() {
- 
+
                     @Override
                     public void handle(ActionEvent event) {
                         String taskName = tb1.getText();
@@ -117,7 +117,7 @@ public class MainFrame extends Application {
                         }
 
                     }
-                
+
                 });
 
                 taskStage.setTitle("taskFrame");
@@ -136,7 +136,7 @@ public class MainFrame extends Application {
         Button setTimer = new Button("Set Timer");
         setTimer.setLayoutX(800); setTimer.setLayoutY(400);
         setTimer.setOnAction(new EventHandler<ActionEvent>() {
- 
+
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("What time would you like?");
