@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class AUMIDRetriever {
-    public static HashMap<String, String> getAppIDs() throws IOException {
+    public static HashMap<String, String> getAUMIDs() throws IOException {
         Process aumidGetProcess = Runtime.getRuntime().exec(new String[]{"powershell.exe", "/c", "Get-StartApps"}); // Executing the command
         aumidGetProcess.getOutputStream().close(); // Getting the results
         
