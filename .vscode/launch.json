@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch TaskDatabase",
+      "request": "launch",
+      "mainClass": "TaskDatabase",
+      "projectName": "Power-Ahn"
+    },
+    {
+      "type": "java",
+      "name": "Launch Main",
+      "request": "launch",
+      "mainClass": "Main",
+      "projectName": "Power-Ahn"
+    },
+    {
+      "type": "java",
       "name": "Launch HelloWorldUITest",
       "request": "launch",
       "mainClass": "HelloWorldUITest",
