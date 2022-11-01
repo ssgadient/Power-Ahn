@@ -9,6 +9,13 @@
       "name": "Launch MainFrame",
       "request": "launch",
       "mainClass": "MainFrame",
+      "projectName": "Power-Ahn"
+    },
+    {
+      "type": "java",
+      "name": "Launch MainFrame",
+      "request": "launch",
+      "mainClass": "MainFrame",
       "projectName": "Power-Ahn_49c8842"
     },
     {
@@ -17,14 +24,6 @@
       "request": "launch",
       "mainClass": "Main",
       "projectName": "Power-Ahn_49c8842"
-    },
-    {
-      "type": "java",
-      "name": "Launch MainFrame",
-      "request": "launch",
-      "vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml",
-      "mainClass": "MainFrame",
-      "projectName": "Power-Ahn_aeae8038"
     },
     {
       "type": "java",
@@ -49,14 +48,6 @@
     },
     {
       "type": "java",
-      "name": "Launch HelloWorldUITest",
-      "request": "launch",
-      "vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml",
-      "mainClass": "HelloWorldUITest",
-      "projectName": "Power-Ahn_49c8842"
-    },
-    {
-      "type": "java",
       "name": "Launch CommandTester",
       "request": "launch",
       "mainClass": "CommandTester",
@@ -68,21 +59,6 @@
       "request": "launch",
       "mainClass": "RuntimeDemo",
       "projectName": "Power-Ahn_49c8842"
-    },
-    {
-      "type": "java",
-      "name": "Launch HelloWorldUITest",
-      "request": "launch",
-      "vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml",
-      "mainClass": "HelloWorldUITest",
-      "projectName": "Power-Ahn_aeae8038"
-    },
-    {
-      "type": "java",
-      "name": "Launch Main",
-      "request": "launch",
-      "mainClass": "Main",
-      "projectName": "Power-Ahn_aeae8038"
     },
     {
       "type": "java",
