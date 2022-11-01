@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch Main",
+      "request": "launch",
+      "mainClass": "Main",
+      "projectName": "Power-Ahn_49c8842"
+    },
+    {
+      "type": "java",
       "name": "Launch AUMIDRetriever",
       "request": "launch",
       "mainClass": "AUMIDRetriever",
