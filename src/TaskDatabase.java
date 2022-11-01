@@ -25,7 +25,9 @@ public class TaskDatabase {
     public static void main(String[] args) throws SQLException {
         // Database 'Task' already created:
         // createTable("Tasks");
-        insertTask("Tasks", new Task("JoyceCA", LocalDateTime.of(2022, 10, 28, 23, 59, 59), "11111"));
+        // insertTask("Tasks", new Task("JoyceCA", LocalDateTime.of(2022, 10, 28, 23,
+        // 59, 59), "11111"));
+        updateTask("Tasks", "taskName", "FinalEssay", "taskName", "finalThesis");
         readTask();
     }
 
@@ -154,21 +156,37 @@ public class TaskDatabase {
 
     /**
      * DISCLAIMER: Needs tweaking to account for different number of parameters.
-     * Update tasks
-     * Parameters: String tableName
+     * Update tasks with command: UPDATE {table} set {attribute} = {value} where
+     * {condition} = {value}
+     * Parameters: String tableName, String columnName, String newValue, String
+     * condition, String conditionValue
      */
-    public static void updateTask() {
+    public static void updateTask(String tableName, String attribute, String newValue, String condition,
+            String conditionValue) {
         String dataBase = "jdbc:mysql://localhost:3306/Task";
         // Open a connection
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
 
             // Update command:
-            String updateCommand = "UPDATE Tasks " +
-                    "SET age = 30 WHERE id in (100, 101)";
+            String updateQuery = "UPDATE " + tableName + " SET " + attribute + "=?" + " WHERE " + condition
+                    + "=?";
+            PreparedStatement pstmt = conn.prepareStatement(updateQuery);
+            // Populate query with values:
+            pstmt.setString(1, newValue);
+            pstmt.setString(2, conditionValue);
 
             // Execute command:
-            stmt.executeUpdate(updateCommand);
+            pstmt.execute();
+
+            // Success message:
+            System.out.println("Table updated ....");
+
+            // Execute command:
+            // stmt.executeUpdate(updateCommand);
+
+            // String SQL = "update Student set age = ? where id = ?";
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -176,7 +194,7 @@ public class TaskDatabase {
     }
 
     /**
-     * Delete tasks
+     * Delete tasks with command: DELETE FROM {table} where {condition}
      * Parameter: Name of task (taskName) to delete
      */
     public static void deleteTask(String taskName) {
