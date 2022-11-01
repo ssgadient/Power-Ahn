@@ -20,7 +20,7 @@ public class Task {
         this.taskName = taskName;
     }
 
-    public Task(String taskName, LocalDateTime dueTime, String appID){
+    public Task(String taskName, LocalDateTime deadline, String appID){
         this.taskName = taskName;
         this.deadline = deadline;
         this.appID = appID;
