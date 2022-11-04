@@ -26,7 +26,8 @@ public class TaskDatabase {
         // Database 'Task' already created:
 
         // Need to drop the table Tasks and create a new table
-        dropDatabase("TaskTest");
+        // createDatabase("Task");
+        createTable();
     }
 
     // Create 'Task' database
@@ -59,8 +60,10 @@ public class TaskDatabase {
             // Set SQL command:
             String createTableCommand = "CREATE TABLE Tasks " +
                     "(taskName VARCHAR(20) not NULL, " +
-                    " dueDate DATE, " +
-                    " dueTime TIME, " +
+                    " startDate DATE, " +
+                    " startTime TIME, " +
+                    " endDate DATE, " +
+                    " endTime TIME, " +
                     " appID VARCHAR(20), " +
                     " PRIMARY KEY ( taskName ))";
 
