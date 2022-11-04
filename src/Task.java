@@ -19,12 +19,13 @@ public class Task {
         this.taskName = taskName;
     }
 
-    public Task(String taskName, Duration estimatedDuration) {
+    // Removed estimatedDuration from parameters, because can only calculate it after creating the task. 
+    public Task(String taskName, LocalDateTime taskStart, LocalDateTime taskEnd, String appID) {
         this.taskName = taskName;
-        this.estimatedDuration = estimatedDuration;
-        this.appID = null;
-        this.taskStart = null;
-        this.taskEnd = null;
+        this.taskStart = taskStart;
+        this.taskEnd = taskEnd;
+        this.estimatedDuration = null; // Set to null for now. We cannot store estimated duration if we cannot calculate it to begin wit. 
+        this.appID = appID;
         this.taskDetails = null;
         this.taskSubject = null;
         this.taskPoints = 0;
@@ -41,8 +42,8 @@ public class Task {
     }
 
     // Converting to an int for duration to be able to store into database
-    public int getEstimatedDuration() {
-        return (int) this.estimatedDuration.toHours();
+    public Duration getEstimatedDuration() {
+        return this.estimatedDuration;
     }
 
     public String getAppID() {

@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.sql.*;
 
@@ -21,6 +21,7 @@ public class TaskDatabase {
     static final String DB_URL = "jdbc:mysql://localhost:3306";
     static final String USER = "root"; // Local server user
     static final String PASS = "sanh2001"; // Local server password
+    static final String timeFormatter = "hh:mm:ss a"; // Format our time objects into AM and PM formats
 
     // Created a branch called
     public static void main(String[] args) throws SQLException {
@@ -33,6 +34,10 @@ public class TaskDatabase {
         // LocalDateTime.of(2022, 11, 1, 10,20, 0), new Task("PA",
         // calculateEstimatedDuration(LocalDateTime startDateTime, LocalDateTime
         // endDateTime)));
+        // insertTask("Tasks", new Task("Discussion", LocalDateTime.of(2020, 10, 1, 10,
+        // 0, 1),
+        // LocalDateTime.of(2024, 1, 25, 10, 20, 0), "Unity"));
+        readTask("taskName, startDate, endDate, duration, appID");
     }
 
     // Create 'Task' database
@@ -84,15 +89,25 @@ public class TaskDatabase {
     }
 
     /**
-     * Create & Insert tasks into our database table.
-     * Paramters: String tableName, object of type Task
+     * Insert tasks into our database table.
+     * Paramters: String tableName, object of type Task (taskName, startTime,
+     * endTime, appID).
+     * Dynamically calculate and set estimatedDuration.
+     * 
+     * For now, me needs to be reformmated before to 24-hour format before being
+     * inserted
+     * startTime.format(DateTimeFormatter.ofPattern(timeFormatter))
      */
-    public static void insertTask(String tableName, LocalDateTime startDateTime, LocalDateTime endDateTime, Task task) {
+    public static void insertTask(String tableName, Task task) {
         String taskName = task.getTaskName();
-        int taskEstimatedDuration = task.getEstimatedDuration(); // getDuration returns an integer
-        LocalDateTime taskStart = startDateTime; // split into separate date & time
-        LocalDateTime taskEnd = endDateTime; // split into separate date & time
+        LocalDateTime taskStart = task.getStartTime(); // split into separate date & time
+        LocalDateTime taskEnd = task.getEndTime(); // split into separate date & time
         String appID = task.getAppID();
+
+        // After new Task object is created, we can calculate and assign the estimated
+        // duration
+        task.setEstimatedDuration(task.calculateEstimatedDuration(taskStart, taskEnd));
+        int taskEstimatedDuration = (int) task.getEstimatedDuration().toHours(); // typecast getDuration as an integer
 
         // Locate the location of our 'Task' database where our 'Tasks' table resides.
         String dataBase = "jdbc:mysql://localhost:3306/Task";
@@ -103,9 +118,6 @@ public class TaskDatabase {
 
             System.out.println("Inserting records into the table...");
 
-            // Get task name
-            // Get duration from both dates and convert it into hours (for now)
-
             // Separate each LocalDateTime Java object into two parts (date & time):
             LocalDate startDate = taskStart.toLocalDate();
             LocalTime startTime = taskStart.toLocalTime();
@@ -114,20 +126,20 @@ public class TaskDatabase {
 
             // Reformat into SQL standard format:
             java.sql.Date task_startDate = java.sql.Date.valueOf(startDate);
-            java.sql.Time task_startTime = java.sql.Time.valueOf(startTime);
+            java.sql.Time task_startTime = java.sql.Time.valueOf(startTime); // Reformat time into AM/PM
             java.sql.Date task_endDate = java.sql.Date.valueOf(endDate);
-            java.sql.Time task_endTime = java.sql.Time.valueOf(endTime);
+            java.sql.Time task_endTime = java.sql.Time.valueOf(endTime); // Reformat time into AM/PM
 
             // Create insert query:
-            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(insertQuery);
 
             // Populate query with values:
             pstmt.setString(1, taskName);
             pstmt.setDate(2, task_startDate);
-            pstmt.setObject(3, task_startTime);
+            pstmt.setTime(3, task_startTime);
             pstmt.setDate(4, task_endDate);
-            pstmt.setObject(5, task_endTime);
+            pstmt.setTime(5, task_endTime);
             pstmt.setInt(6, taskEstimatedDuration);
             pstmt.setString(7, appID);
 
@@ -143,15 +155,18 @@ public class TaskDatabase {
 
     /**
      * Reads & Select tasks
+     * Parameters: A String selectColumns. Example: "taskName, task_startDate,
+     * task_endDate, taskEstimatedDuration, appID"
      */
-    public static void readTask() {
+    public static void readTask(String selectColumns) {
         String dataBase = "jdbc:mysql://localhost:3306/Task";
         // Open a connection
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
 
             // Set read Query:
-            String readQuery = "SELECT taskName, dueTime, appID FROM Tasks";
+            // String readQuery = "SELECT taskName, dueTime, appID FROM Tasks";
+            String readQuery = "SELECT " + selectColumns + " FROM Tasks";
 
             // Store query results into ResultSet
             ResultSet queryResults = stmt.executeQuery(readQuery);
@@ -160,8 +175,11 @@ public class TaskDatabase {
             while (queryResults.next()) {
                 // Retrieve results by column name
                 System.out.print("Task: " + queryResults.getString("taskName"));
-                System.out.print(", Deadline: " + queryResults.getString("dueTime"));
+                System.out.print(", startDate: " + queryResults.getString("startDate"));
+                System.out.print(", endDate: " + queryResults.getString("endDate"));
+                System.out.print(", taskEstimatedDuration: " + queryResults.getString("duration"));
                 System.out.print(", App ID: " + queryResults.getString("appID"));
+
                 // Add a empty line for readability:
                 System.out.println("");
 
