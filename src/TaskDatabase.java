@@ -24,11 +24,9 @@ public class TaskDatabase {
     // Created a branch called
     public static void main(String[] args) throws SQLException {
         // Database 'Task' already created:
-        // createTable("Tasks");
-        // insertTask("Tasks", new Task("JoyceCA", LocalDateTime.of(2022, 10, 28, 23,
-        // 59, 59), "11111"));
-        updateTask("Tasks", "taskName", "FinalEssay", "taskName", "finalThesis");
-        readTask();
+
+        // Need to drop the table Tasks and create a new table
+        dropDatabase("TaskTest");
     }
 
     // Create 'Task' database
@@ -232,7 +230,7 @@ public class TaskDatabase {
                 Statement stmt = conn.createStatement();) {
             String sql = "DROP DATABASE " + database;
             stmt.executeUpdate(sql);
-            System.out.println("Database 'Task' dropped successfully...");
+            System.out.println("Database " + database + " was successfully dropped successfully...");
         } catch (SQLException e) {
             e.printStackTrace();
         }
