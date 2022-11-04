@@ -10,7 +10,7 @@
 	<classpathentry kind="lib" path="lib/javafx-sdk-19/lib/javafx.media.jar"/>
 	<classpathentry kind="lib" path="lib/javafx-sdk-19/lib/javafx.swing.jar"/>
 	<classpathentry kind="lib" path="lib/javafx-sdk-19/lib/javafx.web.jar"/>
-	<classpathentry kind="lib" path="lib/mysql-connector-j-8.0.31.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-j-8.0.31.jar"/> 
 
 	<classpathentry kind="src" path="testing"/>
 	<classpathentry kind="output" path="bin"/>

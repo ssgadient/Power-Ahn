@@ -6,14 +6,14 @@ public class Task {
     private String taskName;
     private Duration estimatedDuration;
     private String appID;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDateTime taskStart;
+    private LocalDateTime taskEnd;
     private String taskDetails;
     private String taskSubject;
     private int taskPoints;
     private LocalDateTime deadline;
-    //private URL taskLink;
-    //private File taskFile;
+    // private URL taskLink;
+    // private File taskFile;
 
     public Task(String taskName) {
         this.taskName = taskName;
@@ -23,14 +23,16 @@ public class Task {
         this.taskName = taskName;
         this.estimatedDuration = estimatedDuration;
         this.appID = null;
-        this.startTime = null;
-        this.endTime = null;
+        this.taskStart = null;
+        this.taskEnd = null;
         this.taskDetails = null;
         this.taskSubject = null;
         this.taskPoints = 0;
         this.deadline = null;
     }
 
+    // Try returning an int for duration in hours from date A to dateB
+    // calculateEstimatedDuration(Task.startTime, Task.endTime)
     public Duration calculateEstimatedDuration(LocalDateTime start, LocalDateTime end) {
         return Duration.between(start, end);
     }
@@ -48,11 +50,11 @@ public class Task {
     }
 
     public LocalDateTime getStartTime() {
-        return this.startTime;
+        return this.taskStart;
     }
 
     public LocalDateTime getEndTime() {
-        return this.endTime;
+        return this.taskEnd;
     }
 
     public String getTaskDetails() {
@@ -70,7 +72,7 @@ public class Task {
     public LocalDateTime getDeadline() {
         return this.deadline;
     }
-    
+
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
@@ -84,11 +86,11 @@ public class Task {
     }
 
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+        this.taskStart = startTime;
     }
 
     public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+        this.taskEnd = endTime;
     }
 
     public void setTaskDetails(String taskDetails) {

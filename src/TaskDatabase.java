@@ -24,10 +24,10 @@ public class TaskDatabase {
     // Created a branch called
     public static void main(String[] args) throws SQLException {
         // Database 'Task' already created:
-
-        // Need to drop the table Tasks and create a new table
         // createDatabase("Task");
+        // Need to create a new table
         createTable();
+        // dropTable("Tasks");
     }
 
     // Create 'Task' database
@@ -50,6 +50,7 @@ public class TaskDatabase {
      * Create a SQL table called Tasks
      * (includes taskName, dueDate, appID)
      * DATE - format YYYY-MM-DD
+     * Display duration in terms of hours, minutes, seconds
      **/
     public static void createTable() {
         // This URL redirects to 'Task' database
@@ -64,6 +65,7 @@ public class TaskDatabase {
                     " startTime TIME, " +
                     " endDate DATE, " +
                     " endTime TIME, " +
+                    " duration INT, " +
                     " appID VARCHAR(20), " +
                     " PRIMARY KEY ( taskName ))";
 
@@ -82,7 +84,7 @@ public class TaskDatabase {
      */
     public static void insertTask(String tableName, Task task) {
         String taskName = task.getTaskName();
-        LocalDateTime deadline = task.getDeadline();
+        LocalDateTime start = task.getDeadline();
         String appID = task.getAppID();
 
         // Locate the location of our 'Task' database where our 'Tasks' table resides.
@@ -93,6 +95,11 @@ public class TaskDatabase {
                 Statement stmt = conn.createStatement();) {
 
             System.out.println("Inserting records into the table...");
+
+            // Get task name 
+            // Get duration from both dates and convert it into hours (for now)
+            // 
+
 
             // Separate LocalDateTime Java object into two parts (date & time):
             LocalDate localDate = deadline.toLocalDate();
@@ -108,8 +115,10 @@ public class TaskDatabase {
 
             // Populate query with values:
             pstmt.setString(1, taskName);
-            pstmt.setDate(2, dueDate);
-            pstmt.setObject(3, dueTime);
+            pstmt.setDate(2, startDate);
+            pstmt.setObject(3, startTime);
+            pstmt.setDate(2, endDate);
+            pstmt.setObject(3, endTime);
             pstmt.setString(4, appID);
 
             pstmt.execute();
