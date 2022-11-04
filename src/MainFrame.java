@@ -11,10 +11,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MainFrame extends Application {
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -30,7 +32,7 @@ public class MainFrame extends Application {
         for (Button b: buttons) {
             root.getChildren().add(b);
         }
-
+        root.getChildren().add(updateTimer());
         Scene background = new Scene(root, 1000, 700);
         background.setFill(Color.rgb(250, 225, 180));
 
@@ -125,7 +127,8 @@ public class MainFrame extends Application {
                             errorStage.showAndWait();
                         }
                         else {
-                            Task task = new Task(taskName);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            Task task = new Task(taskName, Duration.between(LocalDateTime.parse(startTime, formatter), LocalDateTime.parse(endTime, formatter)));
                             System.out.println("Worked!");
                             taskStage.close();
                         }
@@ -160,6 +163,46 @@ public class MainFrame extends Application {
         buttonList.add(setTimer);
 
         return buttonList;
+    }
+
+    //public Text createTimer() {
+        //TimerUI timerUI = new TimerUI(task);
+    //}
+
+    public Text updateTimer() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Duration d = Duration.between(LocalDateTime.parse("2022-11-03 06:00:00", formatter), LocalDateTime.parse("2022-11-03 06:00:30", formatter));
+        int seconds = (int) d.getSeconds();
+        Text timerText = new Text("");
+        Timer timer = new Timer();
+
+        TimerTask timerTask = new TimerTask() {
+            public int innerSeconds = seconds;
+
+            @Override
+            public void run() {
+                int h = innerSeconds / 3600;
+                int m = (innerSeconds % 3600) / 60;
+                int s = innerSeconds % 60;
+                timerText.setText("" + h + ":" + m + ":" + s);
+                setSeconds(getSeconds() - 1);
+                if (innerSeconds < 0) {
+                    timer.cancel();
+                }
+            }
+
+            public int getSeconds() {
+                return innerSeconds;
+            }
+
+            public void setSeconds(int innerSeconds) {
+                this.innerSeconds = innerSeconds;
+            }
+        };
+
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+        timerText.setX(200); timerText.setY(200);
+        return timerText;
     }
 
 }
