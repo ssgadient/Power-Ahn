@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.*;
 import java.time.LocalDate;
 import java.sql.*;
 
@@ -26,8 +27,12 @@ public class TaskDatabase {
         // Database 'Task' already created:
         // createDatabase("Task");
         // Need to create a new table
-        createTable();
+        // createTable();
         // dropTable("Tasks");
+        // insertTask("Tasks", LocalDateTime.of(2022, 10, 1, 10,0, 1),
+        // LocalDateTime.of(2022, 11, 1, 10,20, 0), new Task("PA",
+        // calculateEstimatedDuration(LocalDateTime startDateTime, LocalDateTime
+        // endDateTime)));
     }
 
     // Create 'Task' database
@@ -82,9 +87,11 @@ public class TaskDatabase {
      * Create & Insert tasks into our database table.
      * Paramters: String tableName, object of type Task
      */
-    public static void insertTask(String tableName, Task task) {
+    public static void insertTask(String tableName, LocalDateTime startDateTime, LocalDateTime endDateTime, Task task) {
         String taskName = task.getTaskName();
-        LocalDateTime start = task.getDeadline();
+        int taskEstimatedDuration = task.getEstimatedDuration(); // getDuration returns an integer
+        LocalDateTime taskStart = startDateTime; // split into separate date & time
+        LocalDateTime taskEnd = endDateTime; // split into separate date & time
         String appID = task.getAppID();
 
         // Locate the location of our 'Task' database where our 'Tasks' table resides.
@@ -96,35 +103,39 @@ public class TaskDatabase {
 
             System.out.println("Inserting records into the table...");
 
-            // Get task name 
+            // Get task name
             // Get duration from both dates and convert it into hours (for now)
-            // 
 
-
-            // Separate LocalDateTime Java object into two parts (date & time):
-            LocalDate localDate = deadline.toLocalDate();
-            LocalTime localTime = deadline.toLocalTime();
+            // Separate each LocalDateTime Java object into two parts (date & time):
+            LocalDate startDate = taskStart.toLocalDate();
+            LocalTime startTime = taskStart.toLocalTime();
+            LocalDate endDate = taskEnd.toLocalDate();
+            LocalTime endTime = taskEnd.toLocalTime();
 
             // Reformat into SQL standard format:
-            java.sql.Date dueDate = java.sql.Date.valueOf(localDate);
-            java.sql.Time dueTime = java.sql.Time.valueOf(localTime);
+            java.sql.Date task_startDate = java.sql.Date.valueOf(startDate);
+            java.sql.Time task_startTime = java.sql.Time.valueOf(startTime);
+            java.sql.Date task_endDate = java.sql.Date.valueOf(endDate);
+            java.sql.Time task_endTime = java.sql.Time.valueOf(endTime);
 
             // Create insert query:
-            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(insertQuery);
 
             // Populate query with values:
             pstmt.setString(1, taskName);
-            pstmt.setDate(2, startDate);
-            pstmt.setObject(3, startTime);
-            pstmt.setDate(2, endDate);
-            pstmt.setObject(3, endTime);
-            pstmt.setString(4, appID);
+            pstmt.setDate(2, task_startDate);
+            pstmt.setObject(3, task_startTime);
+            pstmt.setDate(4, task_endDate);
+            pstmt.setObject(5, task_endTime);
+            pstmt.setInt(6, taskEstimatedDuration);
+            pstmt.setString(7, appID);
 
             pstmt.execute();
 
             // Success message:
             System.out.println("Rows inserted ....");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

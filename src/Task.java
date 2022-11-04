@@ -31,8 +31,7 @@ public class Task {
         this.deadline = null;
     }
 
-    // Try returning an int for duration in hours from date A to dateB
-    // calculateEstimatedDuration(Task.startTime, Task.endTime)
+    // Converting to an int for duration to be able to store into database
     public Duration calculateEstimatedDuration(LocalDateTime start, LocalDateTime end) {
         return Duration.between(start, end);
     }
@@ -41,8 +40,9 @@ public class Task {
         return this.taskName;
     }
 
-    public Duration getEstimatedDuration() {
-        return this.estimatedDuration;
+    // Converting to an int for duration to be able to store into database
+    public int getEstimatedDuration() {
+        return (int) this.estimatedDuration.toHours();
     }
 
     public String getAppID() {
