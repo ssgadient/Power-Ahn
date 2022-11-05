@@ -1,4 +1,3 @@
-// Connect Java with MySQL driver
 /**
  * Notes: 
  * INSERT INTO {table} (attribute a, attribute b) VALUES (a, b)
@@ -14,7 +13,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.sql.*;
 
@@ -25,7 +23,6 @@ public class TaskDatabase {
     static final String dataBase = "jdbc:mysql://localhost:3306/Task"; // This URL redirects to 'Task' database
     static final SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss aa");
 
-    // Created a branch called
     public static void main(String[] args) throws SQLException {
         // Database 'Task' already created:
         // createDatabase("Task");
@@ -87,10 +84,6 @@ public class TaskDatabase {
      * Paramters: String tableName, object of type Task (taskName, startTime,
      * endTime, appID).
      * Dynamically calculate and set estimatedDuration.
-     * 
-     * For now, me needs to be reformmated before to 24-hour format before being
-     * inserted
-     * startTime.format(DateTimeFormatter.ofPattern(timeFormatter))
      */
     public static void insertTask(String tableName, Task task) {
         String taskName = task.getTaskName();
