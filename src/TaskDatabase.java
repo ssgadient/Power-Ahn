@@ -186,7 +186,11 @@ public class TaskDatabase {
 
     /**
      * Create a function to query tasks if task startTime is close to currentTime
-     * Link to read: https://www.tutorialspoint.com/mysql-query-to-select-closest-date-from-today
+     * Article: Return nearest dates to current date
+     * https://www.tutorialspoint.com/mysql-query-to-select-closest-date-from-today
+     * 
+     * Article: Return nearest DATETIME objects to current timestamp
+     * https://stackoverflow.com/questions/6186962/sql-query-to-show-nearest-date
      * 
      * Query to use: 
      * mysql> select ShippingDate
