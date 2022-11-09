@@ -32,7 +32,7 @@ public class MainFrame extends Application {
         for (Button b: buttons) {
             root.getChildren().add(b);
         }
-        root.getChildren().add(updateTimer());
+        root.getChildren().add(createTimer("2022-11-08 11:00:00", "2022-11-08 19:00:00"));
         Scene background = new Scene(root, 1000, 700);
         background.setFill(Color.rgb(250, 225, 180));
 
@@ -148,8 +148,6 @@ public class MainFrame extends Application {
 
         buttonList.add(createTask);
 
-
-
         Button setTimer = new Button("Set Timer");
         setTimer.setLayoutX(800); setTimer.setLayoutY(400);
         setTimer.setOnAction(new EventHandler<ActionEvent>() {
@@ -165,13 +163,9 @@ public class MainFrame extends Application {
         return buttonList;
     }
 
-    //public Text createTimer() {
-        //TimerUI timerUI = new TimerUI(task);
-    //}
-
-    public Text updateTimer() {
+    public Text createTimer(String before, String after) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Duration d = Duration.between(LocalDateTime.parse("2022-11-03 06:00:00", formatter), LocalDateTime.parse("2022-11-03 06:00:30", formatter));
+        Duration d = Duration.between(LocalDateTime.parse(before, formatter), LocalDateTime.parse(after, formatter));
         int seconds = (int) d.getSeconds();
         Text timerText = new Text("");
         Timer timer = new Timer();
@@ -184,7 +178,19 @@ public class MainFrame extends Application {
                 int h = innerSeconds / 3600;
                 int m = (innerSeconds % 3600) / 60;
                 int s = innerSeconds % 60;
-                timerText.setText("" + h + ":" + m + ":" + s);
+                String hours = Integer.toString(h);
+                String minutes = Integer.toString(m);
+                String seconds = Integer.toString(s);
+                if (h < 10) {
+                    hours = "0" + h;
+                }
+                if (m < 10) {
+                    minutes = "0" + m;
+                }
+                if (s < 10) {
+                    seconds = "0" + s;
+                }
+                timerText.setText("" + hours + ":" + minutes + ":" + seconds);
                 setSeconds(getSeconds() - 1);
                 if (innerSeconds < 0) {
                     timer.cancel();
@@ -201,7 +207,9 @@ public class MainFrame extends Application {
         };
 
         timer.scheduleAtFixedRate(timerTask, 0, 1000);
-        timerText.setX(200); timerText.setY(200);
+        timerText.setX(700); timerText.setY(200);
+        timerText.setFont(Font.font("Times New Roman", 60));
+        timerText.setFill(Color.GREEN);
         return timerText;
     }
 
