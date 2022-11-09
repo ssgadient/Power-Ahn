@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public class MainFrame extends Application {
-    public static void main(String[] args) {
+    public static void openApp(String[] args) {
         launch(args);
     }
 
