@@ -29,9 +29,9 @@ public class TaskDatabase {
         // createTable();
         // dropTable("Tasks");
         // deleteTask("Database JDBC Task");
-        insertTask("Tasks", new Task("Database JDBC Task", LocalDateTime.of(2001, 5, 1, 18, 0, 0),
-                LocalDateTime.of(2022, 11, 5, 14, 00, 00), "Unity"));
-        // readTask("taskName, startDate, end, duration, appID");
+        //insertTask("Tasks", new Task("Database JDBC Task", LocalDateTime.of(2001, 5, 1, 18, 0, 0),
+               // LocalDateTime.of(2022, 11, 5, 14, 00, 00), "Unity"));
+        readTask("taskName, startDate, endDate, duration, appID");
     }
 
     // Create 'Task' database
