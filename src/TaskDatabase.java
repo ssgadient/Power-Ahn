@@ -185,6 +185,20 @@ public class TaskDatabase {
     }
 
     /**
+     * Create a function to query tasks if task startTime is close to currentTime
+     * Link to read: https://www.tutorialspoint.com/mysql-query-to-select-closest-date-from-today
+     * 
+     * Query to use: 
+     * mysql> select ShippingDate
+        from DemoTable667
+        where date(ShippingDate) = (select min(date(ShippingDate))
+            from DemoTable667
+            where date(ShippingDate) > date(now())
+        );
+     */
+
+
+    /**
      * DISCLAIMER: Needs tweaking to account for different number of parameters.
      * Update tasks with command: UPDATE {table} set {attribute} = {value} where
      * {condition} = {value}
