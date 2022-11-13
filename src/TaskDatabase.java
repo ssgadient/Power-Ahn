@@ -1,4 +1,3 @@
-// Connect Java with MySQL driver
 /**
  * Notes: 
  * INSERT INTO {table} (attribute a, attribute b) VALUES (a, b)
@@ -11,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.LocalDate;
@@ -20,15 +20,18 @@ public class TaskDatabase {
     static final String DB_URL = "jdbc:mysql://localhost:3306";
     static final String USER = "root"; // Local server user
     static final String PASS = "sanh2001"; // Local server password
+    static final String dataBase = "jdbc:mysql://localhost:3306/Task"; // This URL redirects to 'Task' database
+    static final SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss aa");
 
-    // Created a branch called
     public static void main(String[] args) throws SQLException {
         // Database 'Task' already created:
-        // createTable("Tasks");
-        // insertTask("Tasks", new Task("JoyceCA", LocalDateTime.of(2022, 10, 28, 23,
-        // 59, 59), "11111"));
-        updateTask("Tasks", "taskName", "FinalEssay", "taskName", "finalThesis");
-        readTask();
+        // createDatabase("Task");
+        // createTable();
+        // dropTable("Tasks");
+        // deleteTask("Database JDBC Task");
+        //insertTask("Tasks", new Task("Database JDBC Task", LocalDateTime.of(2001, 5, 1, 18, 0, 0),
+               // LocalDateTime.of(2022, 11, 5, 14, 00, 00), "Unity"));
+        readTask("taskName, startDate, endDate, duration, appID");
     }
 
     // Create 'Task' database
@@ -51,18 +54,19 @@ public class TaskDatabase {
      * Create a SQL table called Tasks
      * (includes taskName, dueDate, appID)
      * DATE - format YYYY-MM-DD
+     * Display duration in terms of hours, minutes, seconds
      **/
     public static void createTable() {
-        // This URL redirects to 'Task' database
-        String dataBase = "jdbc:mysql://localhost:3306/Task";
-
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
             // Set SQL command:
             String createTableCommand = "CREATE TABLE Tasks " +
                     "(taskName VARCHAR(20) not NULL, " +
-                    " dueDate DATE, " +
-                    " dueTime TIME, " +
+                    " startDate DATE, " +
+                    " startTime VARCHAR(20), " +
+                    " endDate DATE, " +
+                    " endTime VARCHAR(20), " +
+                    " duration INT, " +
                     " appID VARCHAR(20), " +
                     " PRIMARY KEY ( taskName ))";
 
@@ -76,13 +80,21 @@ public class TaskDatabase {
     }
 
     /**
-     * Create & Insert tasks into our database table.
-     * Paramters: String tableName, object of type Task
+     * Insert tasks into our database table.
+     * Paramters: String tableName, object of type Task (taskName, startTime,
+     * endTime, appID).
+     * Dynamically calculate and set estimatedDuration.
      */
     public static void insertTask(String tableName, Task task) {
         String taskName = task.getTaskName();
-        LocalDateTime deadline = task.getDeadline();
+        LocalDateTime taskStart = task.getStartTime(); // split into separate date & time
+        LocalDateTime taskEnd = task.getEndTime(); // split into separate date & time
         String appID = task.getAppID();
+
+        // After new Task object is created, we can calculate and assign the estimated
+        // duration
+        task.setEstimatedDuration(task.calculateEstimatedDuration(taskStart, taskEnd));
+        int taskEstimatedDuration = (int) task.getEstimatedDuration().toHours(); // typecast getDuration as an integer
 
         // Locate the location of our 'Task' database where our 'Tasks' table resides.
         String dataBase = "jdbc:mysql://localhost:3306/Task";
@@ -93,28 +105,42 @@ public class TaskDatabase {
 
             System.out.println("Inserting records into the table...");
 
-            // Separate LocalDateTime Java object into two parts (date & time):
-            LocalDate localDate = deadline.toLocalDate();
-            LocalTime localTime = deadline.toLocalTime();
+            // Separate each LocalDateTime Java object into two parts (date & time):
+            LocalDate startDate = taskStart.toLocalDate();
+            LocalTime startTime = taskStart.toLocalTime();
+            LocalDate endDate = taskEnd.toLocalDate();
+            LocalTime endTime = taskEnd.toLocalTime();
 
             // Reformat into SQL standard format:
-            java.sql.Date dueDate = java.sql.Date.valueOf(localDate);
-            java.sql.Time dueTime = java.sql.Time.valueOf(localTime);
+            java.sql.Date task_startDate = java.sql.Date.valueOf(startDate);
+            java.sql.Time task_startTime = java.sql.Time.valueOf(startTime); // Reformat time into AM/PM
+            java.sql.Date task_endDate = java.sql.Date.valueOf(endDate);
+            java.sql.Time task_endTime = java.sql.Time.valueOf(endTime); // Reformat time into AM/PM
 
             // Create insert query:
-            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(insertQuery);
+
+            // Turn time object into a String to insert into Database
+            String startTime_toString = formatTime.format(task_startTime);
+            String endTime_toString = formatTime.format(task_endTime);
+            // String endTime_toString =
+            // endTime.format(DateTimeFormatter.ofPattern(timeFormatter));
 
             // Populate query with values:
             pstmt.setString(1, taskName);
-            pstmt.setDate(2, dueDate);
-            pstmt.setObject(3, dueTime);
-            pstmt.setString(4, appID);
+            pstmt.setDate(2, task_startDate);
+            pstmt.setString(3, startTime_toString);
+            pstmt.setDate(4, task_endDate);
+            pstmt.setString(5, endTime_toString);
+            pstmt.setInt(6, taskEstimatedDuration);
+            pstmt.setString(7, appID);
 
             pstmt.execute();
 
             // Success message:
             System.out.println("Rows inserted ....");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,15 +148,17 @@ public class TaskDatabase {
 
     /**
      * Reads & Select tasks
+     * Parameters: A String selectColumns. Example: "taskName, task_startDate,
+     * task_endDate, taskEstimatedDuration, appID"
      */
-    public static void readTask() {
-        String dataBase = "jdbc:mysql://localhost:3306/Task";
+    public static void readTask(String selectColumns) {
         // Open a connection
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
 
             // Set read Query:
-            String readQuery = "SELECT taskName, dueTime, appID FROM Tasks";
+            // String readQuery = "SELECT taskName, dueTime, appID FROM Tasks";
+            String readQuery = "SELECT " + selectColumns + " FROM Tasks";
 
             // Store query results into ResultSet
             ResultSet queryResults = stmt.executeQuery(readQuery);
@@ -139,11 +167,13 @@ public class TaskDatabase {
             while (queryResults.next()) {
                 // Retrieve results by column name
                 System.out.print("Task: " + queryResults.getString("taskName"));
-                System.out.print(", Deadline: " + queryResults.getString("dueTime"));
+                System.out.print(", startDate: " + queryResults.getString("startDate"));
+                System.out.print(", endDate: " + queryResults.getString("endDate"));
+                System.out.print(", taskEstimatedDuration: " + queryResults.getString("duration"));
                 System.out.print(", App ID: " + queryResults.getString("appID"));
+
                 // Add a empty line for readability:
                 System.out.println("");
-
             }
 
             // Success message:
@@ -155,6 +185,24 @@ public class TaskDatabase {
     }
 
     /**
+     * Create a function to query tasks if task startTime is close to currentTime
+     * Article: Return nearest dates to current date
+     * https://www.tutorialspoint.com/mysql-query-to-select-closest-date-from-today
+     * 
+     * Article: Return nearest DATETIME objects to current timestamp
+     * https://stackoverflow.com/questions/6186962/sql-query-to-show-nearest-date
+     * 
+     * Query to use: 
+     * mysql> select ShippingDate
+        from DemoTable667
+        where date(ShippingDate) = (select min(date(ShippingDate))
+            from DemoTable667
+            where date(ShippingDate) > date(now())
+        );
+     */
+
+
+    /**
      * DISCLAIMER: Needs tweaking to account for different number of parameters.
      * Update tasks with command: UPDATE {table} set {attribute} = {value} where
      * {condition} = {value}
@@ -163,7 +211,6 @@ public class TaskDatabase {
      */
     public static void updateTask(String tableName, String attribute, String newValue, String condition,
             String conditionValue) {
-        String dataBase = "jdbc:mysql://localhost:3306/Task";
         // Open a connection
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
@@ -181,12 +228,6 @@ public class TaskDatabase {
 
             // Success message:
             System.out.println("Table updated ....");
-
-            // Execute command:
-            // stmt.executeUpdate(updateCommand);
-
-            // String SQL = "update Student set age = ? where id = ?";
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -198,27 +239,35 @@ public class TaskDatabase {
      * Parameter: Name of task (taskName) to delete
      */
     public static void deleteTask(String taskName) {
-        // Open a connection
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
 
-            // Delete command:
-            String deleteCommand = "DELETE FROM Tasks " +
-                    "WHERE taskName = " + taskName;
+            // Delete query:
+            String deleteQuery = "DELETE FROM Tasks WHERE taskName = ? ";
+
+            PreparedStatement deleteStatement = conn.prepareStatement(deleteQuery);
+            // Populate query with values:
+            deleteStatement.setString(1, taskName);
+
             // Execute command:
-            stmt.executeUpdate(deleteCommand);
-            ResultSet queryResults = stmt.executeQuery(deleteCommand);
+            deleteStatement.execute();
 
-            // View changes:
-            while (queryResults.next()) {
-                // Retrieve by column name
-                System.out.print("Task: " + queryResults.getString("taskName"));
-                System.out.print(", Deadline: " + queryResults.getString("dueTime"));
-                System.out.print(", App ID: " + queryResults.getString("appID"));
-            }
-
+            System.out.println("Task " + taskName + " has been deleted!");
+            /*
+             * // View changes:
+             * while (queryResults.next()) {
+             * // Retrieve by column name
+             * System.out.print("Task: " + queryResults.getString("taskName"));
+             * System.out.print("startDate: " + queryResults.getString("startDate"));
+             * System.out.print("startTime: " + queryResults.getString("startTime"));
+             * System.out.print("endDate: " + queryResults.getString("endDate"));
+             * System.out.print("endTime: " + queryResults.getString("endTime"));
+             * System.out.print("duration: " + queryResults.getString("taskName"));
+             * System.out.print("App ID: " + queryResults.getString("appID"));
+             */
             // Close query:
-            queryResults.close();
+            // queryResults.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -232,7 +281,7 @@ public class TaskDatabase {
                 Statement stmt = conn.createStatement();) {
             String sql = "DROP DATABASE " + database;
             stmt.executeUpdate(sql);
-            System.out.println("Database 'Task' dropped successfully...");
+            System.out.println("Database " + database + " was successfully dropped successfully...");
         } catch (SQLException e) {
             e.printStackTrace();
         }
