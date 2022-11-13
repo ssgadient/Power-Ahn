@@ -138,7 +138,7 @@ public class MainFrame extends Application {
                         }
                         else {
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            Task task = new Task(taskName, Duration.between(LocalDateTime.parse(startTime, formatter), LocalDateTime.parse(endTime, formatter)));
+                            //Task task = new Task(taskName, Duration.between(LocalDateTime.parse(startTime, formatter), LocalDateTime.parse(endTime, formatter)));
                             System.out.println("Worked!");
                             taskStage.close();
                         }
