@@ -29,9 +29,9 @@ public class TaskDatabase {
         // createTable();
         // dropTable("Tasks");
         // deleteTask("Database JDBC Task");
-        //insertTask("Tasks", new Task("Database JDBC Task", LocalDateTime.of(2001, 5, 1, 18, 0, 0),
-               // LocalDateTime.of(2022, 11, 5, 14, 00, 00), "Unity"));
-        readTask("taskName, startDate, endDate, duration, appID");
+        // insertTask("Tasks", new Task("Test5", LocalDateTime.of(2022, 11, 20, 4,  0), LocalDateTime.of(2022, 11, 20, 20, 0, 00), "Unity"));
+        // readTask("taskName, startDate, endDate, duration, appID");
+        readClosestDate();
     }
 
     // Create 'Task' database
@@ -167,10 +167,11 @@ public class TaskDatabase {
             while (queryResults.next()) {
                 // Retrieve results by column name
                 System.out.print("Task: " + queryResults.getString("taskName"));
-                System.out.print(", startDate: " + queryResults.getString("startDate"));
-                System.out.print(", endDate: " + queryResults.getString("endDate"));
-                System.out.print(", taskEstimatedDuration: " + queryResults.getString("duration"));
-                System.out.print(", App ID: " + queryResults.getString("appID"));
+                // System.out.print(", startDate: " + queryResults.getString("startDate"));
+                // System.out.print(", endDate: " + queryResults.getString("endDate"));
+                // System.out.print(", taskEstimatedDuration: " +
+                // queryResults.getString("duration"));
+                // System.out.print(", App ID: " + queryResults.getString("appID"));
 
                 // Add a empty line for readability:
                 System.out.println("");
@@ -192,15 +193,42 @@ public class TaskDatabase {
      * Article: Return nearest DATETIME objects to current timestamp
      * https://stackoverflow.com/questions/6186962/sql-query-to-show-nearest-date
      * 
-     * Query to use: 
-     * mysql> select ShippingDate
-        from DemoTable667
-        where date(ShippingDate) = (select min(date(ShippingDate))
-            from DemoTable667
-            where date(ShippingDate) > date(now())
-        );
+     * Query to use:
+     * 
+     * SELECT taskName
+     * FROM Tasks
+     * WHERE startDate > NOW() AND startTime > NOW() 
+     * ORDER BY startTime
+     * LIMIT 3
+     * 
+     * Want to set readQuery equal to the query,
+     * 
      */
+    public static void readClosestDate() {
+        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+                Statement stmt = conn.createStatement();) {
 
+            // Query to select startDates from Tasks table
+            String readQuery = "SELECT taskName FROM Tasks WHERE startDate > NOW() AND startTime > NOW() ORDER BY startDate LIMIT 3 ";
+
+            // Store query results into ResultSet
+            ResultSet queryResults = stmt.executeQuery(readQuery);
+
+            // Extract query data from result set
+            while (queryResults.next()) {
+                // Retrieve results by column name
+                System.out.print("Task: " + queryResults.getString("taskName"));
+                System.out.println("");
+            }
+
+            // Success message:
+            System.out.println("Query results printed.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * DISCLAIMER: Needs tweaking to account for different number of parameters.
