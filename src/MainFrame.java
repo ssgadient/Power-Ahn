@@ -4,8 +4,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -65,12 +65,13 @@ public class MainFrame extends Application {
                 tb2.setPrefWidth(80);
 
                 ToggleGroup startampm = new ToggleGroup();
-                ToggleButton startam = new ToggleButton("AM");
-                startam.setLayoutX(200); startam.setLayoutY(110);
+                RadioButton startam = new RadioButton("AM");
+                startam.setLayoutX(210); startam.setLayoutY(113);
+                startam.setSelected(true);
                 startam.setToggleGroup(startampm);
-                ToggleButton startpm = new ToggleButton("PM");
+                RadioButton startpm = new RadioButton("PM");
                 startpm.setToggleGroup(startampm);
-                startpm.setLayoutX(235); startpm.setLayoutY(110);
+                startpm.setLayoutX(255); startpm.setLayoutY(113);
 
                 Text t3 = new Text("End Time*"); 
                 t3.setX(50); t3.setY(175);
