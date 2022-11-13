@@ -4,8 +4,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -65,18 +65,29 @@ public class MainFrame extends Application {
                 tb2.setPrefWidth(80);
 
                 ToggleGroup startampm = new ToggleGroup();
-                ToggleButton startam = new ToggleButton("AM");
-                startam.setLayoutX(200); startam.setLayoutY(110);
+                RadioButton startam = new RadioButton("AM");
+                startam.setLayoutX(210); startam.setLayoutY(113);
+                startam.setSelected(true);
                 startam.setToggleGroup(startampm);
-                ToggleButton startpm = new ToggleButton("PM");
+                RadioButton startpm = new RadioButton("PM");
                 startpm.setToggleGroup(startampm);
-                startpm.setLayoutX(235); startpm.setLayoutY(110);
+                startpm.setLayoutX(255); startpm.setLayoutY(113);
 
                 Text t3 = new Text("End Time*"); 
                 t3.setX(50); t3.setY(175);
                 t3.setFont(Font.font("Times New Roman", 14));
                 TextField tb3 = new TextField();
                 tb3.setLayoutX(120); tb3.setLayoutY(160);
+                tb3.setPrefWidth(80);
+
+                ToggleGroup startampm2 = new ToggleGroup();
+                RadioButton startam2 = new RadioButton("AM");
+                startam2.setLayoutX(210); startam2.setLayoutY(163);
+                startam2.setSelected(true);
+                startam2.setToggleGroup(startampm2);
+                RadioButton startpm2 = new RadioButton("PM");
+                startpm2.setToggleGroup(startampm2);
+                startpm2.setLayoutX(255); startpm2.setLayoutY(163);
 
                 Text t4 = new Text("App Name");
                 t4.setX(50); t4.setY(225);
@@ -87,7 +98,7 @@ public class MainFrame extends Application {
                 Button submit = new Button("Add Task");
                 submit.setLayoutX(300); submit.setLayoutY(250);
 
-                Group root = new Group(t1, tb1, t2, tb2, t3, tb3, t4, tb4, submit, startam, startpm);
+                Group root = new Group(t1, tb1, t2, tb2, t3, tb3, t4, tb4, submit, startam, startpm, startam2, startpm2);
                 Scene background = new Scene(root, 400, 350);
                 Stage taskStage = new Stage();
 
