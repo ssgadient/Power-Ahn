@@ -78,6 +78,16 @@ public class MainFrame extends Application {
                 t3.setFont(Font.font("Times New Roman", 14));
                 TextField tb3 = new TextField();
                 tb3.setLayoutX(120); tb3.setLayoutY(160);
+                tb3.setPrefWidth(80);
+
+                ToggleGroup startampm2 = new ToggleGroup();
+                RadioButton startam2 = new RadioButton("AM");
+                startam2.setLayoutX(210); startam2.setLayoutY(163);
+                startam2.setSelected(true);
+                startam2.setToggleGroup(startampm2);
+                RadioButton startpm2 = new RadioButton("PM");
+                startpm2.setToggleGroup(startampm2);
+                startpm2.setLayoutX(255); startpm2.setLayoutY(163);
 
                 Text t4 = new Text("App Name");
                 t4.setX(50); t4.setY(225);
@@ -88,7 +98,7 @@ public class MainFrame extends Application {
                 Button submit = new Button("Add Task");
                 submit.setLayoutX(300); submit.setLayoutY(250);
 
-                Group root = new Group(t1, tb1, t2, tb2, t3, tb3, t4, tb4, submit, startam, startpm);
+                Group root = new Group(t1, tb1, t2, tb2, t3, tb3, t4, tb4, submit, startam, startpm, startam2, startpm2);
                 Scene background = new Scene(root, 400, 350);
                 Stage taskStage = new Stage();
 
