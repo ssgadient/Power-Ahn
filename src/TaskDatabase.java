@@ -12,8 +12,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.LocalDate;
+import java.util.ArrayList;
+// import java.time.LocalTime;
+// import java.time.LocalDate;
 import java.sql.*;
 
 public class TaskDatabase {
@@ -29,7 +30,18 @@ public class TaskDatabase {
         // createTable();
         // dropTable("Tasks");
         // deleteTask("Database JDBC Task");
-        // insertTask("Tasks", new Task("Test5", LocalDateTime.of(2022, 11, 20, 4,  0), LocalDateTime.of(2022, 11, 20, 20, 0, 00), "Unity"));
+        /*
+         * insertTask("Tasks", new Task("Test0", LocalDateTime.of(2022, 11, 13, 10, 0),
+         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
+         * insertTask("Tasks", new Task("Test1", LocalDateTime.of(2022, 11, 14, 10, 0),
+         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
+         * insertTask("Tasks", new Task("Test2", LocalDateTime.of(2022, 11, 15, 10, 0),
+         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
+         * insertTask("Tasks", new Task("Test3", LocalDateTime.of(2022, 11, 16, 10, 0),
+         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
+         * insertTask("Tasks", new Task("Test4", LocalDateTime.of(2022, 11, 17, 10, 0),
+         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
+         */
         // readTask("taskName, startDate, endDate, duration, appID");
         readClosestDate();
     }
@@ -62,10 +74,8 @@ public class TaskDatabase {
             // Set SQL command:
             String createTableCommand = "CREATE TABLE Tasks " +
                     "(taskName VARCHAR(20) not NULL, " +
-                    " startDate DATE, " +
-                    " startTime VARCHAR(20), " +
-                    " endDate DATE, " +
-                    " endTime VARCHAR(20), " +
+                    " startDate DATETIME, " +
+                    " endDate DATETIME, " +
                     " duration INT, " +
                     " appID VARCHAR(20), " +
                     " PRIMARY KEY ( taskName ))";
@@ -106,36 +116,38 @@ public class TaskDatabase {
             System.out.println("Inserting records into the table...");
 
             // Separate each LocalDateTime Java object into two parts (date & time):
-            LocalDate startDate = taskStart.toLocalDate();
-            LocalTime startTime = taskStart.toLocalTime();
-            LocalDate endDate = taskEnd.toLocalDate();
-            LocalTime endTime = taskEnd.toLocalTime();
+            /*
+             * LocalDate startDate = taskStart.toLocalDate();
+             * LocalTime startTime = taskStart.toLocalTime();
+             * LocalDate endDate = taskEnd.toLocalDate();
+             * LocalTime endTime = taskEnd.toLocalTime();
+             */
 
             // Reformat into SQL standard format:
-            java.sql.Date task_startDate = java.sql.Date.valueOf(startDate);
-            java.sql.Time task_startTime = java.sql.Time.valueOf(startTime); // Reformat time into AM/PM
-            java.sql.Date task_endDate = java.sql.Date.valueOf(endDate);
-            java.sql.Time task_endTime = java.sql.Time.valueOf(endTime); // Reformat time into AM/PM
+            java.sql.Timestamp task_startDate = java.sql.Timestamp.valueOf(task.getStartTime());
+            // java.sql.Time task_startTime = java.sql.Time.valueOf(startTime);
+            java.sql.Timestamp task_endDate = java.sql.Timestamp.valueOf(task.getEndTime());
+            // java.sql.Time task_endTime = java.sql.Time.valueOf(endTime);
 
             // Create insert query:
-            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(insertQuery);
 
             // Turn time object into a String to insert into Database
-            String startTime_toString = formatTime.format(task_startTime);
-            String endTime_toString = formatTime.format(task_endTime);
+            // String startTime_toString = formatTime.format(task_startTime); // Reformat
+            // time into AM/PM
+            // String endTime_toString = formatTime.format(task_endTime);
             // String endTime_toString =
             // endTime.format(DateTimeFormatter.ofPattern(timeFormatter));
 
             // Populate query with values:
             pstmt.setString(1, taskName);
-            pstmt.setDate(2, task_startDate);
-            pstmt.setString(3, startTime_toString);
-            pstmt.setDate(4, task_endDate);
-            pstmt.setString(5, endTime_toString);
-            pstmt.setInt(6, taskEstimatedDuration);
-            pstmt.setString(7, appID);
-
+            pstmt.setObject(2, task_startDate);
+            // pstmt.setTime(3, task_startTime);
+            pstmt.setObject(3, task_endDate);
+            // pstmt.setTime(5, task_endTime);
+            pstmt.setInt(4, taskEstimatedDuration);
+            pstmt.setString(5, appID);
             pstmt.execute();
 
             // Success message:
@@ -197,19 +209,22 @@ public class TaskDatabase {
      * 
      * SELECT taskName
      * FROM Tasks
-     * WHERE startDate > NOW() AND startTime > NOW() 
+     * WHERE startDate > NOW() AND startTime > NOW()
      * ORDER BY startTime
      * LIMIT 3
      * 
-     * Want to set readQuery equal to the query,
      * 
+     * Make sure to change the return type to ArrayList
      */
-    public static void readClosestDate() {
+    public static ArrayList<String> readClosestDate() {
+        // Create and return a new ArrayList that stores taskNames
+        ArrayList<String> tasks = new ArrayList<String>();
+
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
 
             // Query to select startDates from Tasks table
-            String readQuery = "SELECT taskName FROM Tasks WHERE startDate > NOW() AND startTime > NOW() ORDER BY startDate LIMIT 3 ";
+            String readQuery = "SELECT taskName FROM Tasks WHERE startDate > NOW() ORDER BY startDate LIMIT 1";
 
             // Store query results into ResultSet
             ResultSet queryResults = stmt.executeQuery(readQuery);
@@ -219,14 +234,19 @@ public class TaskDatabase {
                 // Retrieve results by column name
                 System.out.print("Task: " + queryResults.getString("taskName"));
                 System.out.println("");
-            }
 
-            // Success message:
+                // Insert each taskName into the ArrayList
+                tasks.add(queryResults.getString("taskName"));
+            }
+            // Success messages:
             System.out.println("Query results printed.");
+            System.out.println("");
+            System.out.println(tasks);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return tasks;
 
     }
 
