@@ -11,9 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class MainFrame extends Application {
 
@@ -111,6 +109,7 @@ public class MainFrame extends Application {
                                 LocalDateTime start = LocalDateTime.parse(formatTime(startTime), formatter);
                                 LocalDateTime end = LocalDateTime.parse(formatTime(endTime), formatter);
                                 Task task = new Task(taskName, start, end);
+
                                 System.out.println("Worked!");
                                 taskStage.close();
                             } catch(Exception e) {
