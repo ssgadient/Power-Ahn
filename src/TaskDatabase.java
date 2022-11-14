@@ -43,7 +43,7 @@ public class TaskDatabase {
          * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
          */
         // readTask("taskName, startDate, endDate, duration, appID");
-        readClosestDate();
+        readClosestDate(2);
     }
 
     // Create 'Task' database
@@ -198,25 +198,16 @@ public class TaskDatabase {
     }
 
     /**
-     * Create a function to query tasks if task startTime is close to currentTime
-     * Article: Return nearest dates to current date
-     * https://www.tutorialspoint.com/mysql-query-to-select-closest-date-from-today
+     * Return the n closest tasks whose dates are closest to the current time. Returns an ArrayList containing the taskName(s).
      * 
-     * Article: Return nearest DATETIME objects to current timestamp
-     * https://stackoverflow.com/questions/6186962/sql-query-to-show-nearest-date
-     * 
-     * Query to use:
-     * 
+     * Query:
      * SELECT taskName
      * FROM Tasks
-     * WHERE startDate > NOW() AND startTime > NOW()
+     * WHERE startDate > NOW()
      * ORDER BY startTime
-     * LIMIT 3
-     * 
-     * 
-     * Make sure to change the return type to ArrayList
+     * LIMIT N
      */
-    public static ArrayList<String> readClosestDate() {
+    public static ArrayList<String> readClosestDate(int n) {
         // Create and return a new ArrayList that stores taskNames
         ArrayList<String> tasks = new ArrayList<String>();
 
@@ -224,7 +215,7 @@ public class TaskDatabase {
                 Statement stmt = conn.createStatement();) {
 
             // Query to select startDates from Tasks table
-            String readQuery = "SELECT taskName FROM Tasks WHERE startDate > NOW() ORDER BY startDate LIMIT 1";
+            String readQuery = "SELECT taskName FROM Tasks WHERE startDate > NOW() ORDER BY startDate LIMIT " + n;
 
             // Store query results into ResultSet
             ResultSet queryResults = stmt.executeQuery(readQuery);
