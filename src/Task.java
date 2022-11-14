@@ -35,8 +35,8 @@ public class Task {
     public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime) {
         this.taskName = taskName;
         this.appID = null;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.taskStart = startTime;
+        this.taskEnd = endTime;
         this.taskDetails = null;
         this.taskSubject = null;
         this.taskPoints = 0;
