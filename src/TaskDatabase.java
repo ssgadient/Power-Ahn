@@ -42,7 +42,7 @@ public class TaskDatabase {
          * insertTask("Tasks", new Task("Test4", LocalDateTime.of(2022, 11, 17, 10, 0),
          * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
          */
-        // readTask("taskName, startDate, endDate, duration, appID");
+        readTask("taskName, startDate, endDate, duration, appID");
         readClosestDate(2);
     }
 
@@ -179,11 +179,10 @@ public class TaskDatabase {
             while (queryResults.next()) {
                 // Retrieve results by column name
                 System.out.print("Task: " + queryResults.getString("taskName"));
-                // System.out.print(", startDate: " + queryResults.getString("startDate"));
-                // System.out.print(", endDate: " + queryResults.getString("endDate"));
-                // System.out.print(", taskEstimatedDuration: " +
-                // queryResults.getString("duration"));
-                // System.out.print(", App ID: " + queryResults.getString("appID"));
+                System.out.print(", startDate: " + queryResults.getString("startDate"));
+                System.out.print(", endDate: " + queryResults.getString("endDate"));
+                System.out.print(", taskEstimatedDuration: " + queryResults.getString("duration"));
+                System.out.print(", App ID: " + queryResults.getString("appID"));
 
                 // Add a empty line for readability:
                 System.out.println("");
@@ -232,7 +231,6 @@ public class TaskDatabase {
             }
 
             // Success messages:
-
             System.out.println("");
             System.out.println("ArrayList:");
             System.out.println(tasks);
