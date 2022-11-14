@@ -220,6 +220,7 @@ public class TaskDatabase {
             // Store query results into ResultSet
             ResultSet queryResults = stmt.executeQuery(readQuery);
 
+            System.out.println("Here are the " + n + " closest tasks.");
             // Extract query data from result set
             while (queryResults.next()) {
                 // Retrieve results by column name
@@ -229,9 +230,11 @@ public class TaskDatabase {
                 // Insert each taskName into the ArrayList
                 tasks.add(queryResults.getString("taskName"));
             }
+
             // Success messages:
-            System.out.println("Query results printed.");
+
             System.out.println("");
+            System.out.println("ArrayList:");
             System.out.println(tasks);
 
         } catch (SQLException e) {
