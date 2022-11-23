@@ -253,6 +253,8 @@ public class TaskDatabase {
 
 
                 // TEST: Populate myTaskList arraylist
+                // Note that new objects are always stored in Heap memory, while the reference to those objects 
+                // are stored in Stack memory.
                 myTaskList.add(new Task(taskName, startDate, endDate, appID));
 
 
