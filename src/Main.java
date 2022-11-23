@@ -1,7 +1,11 @@
 class Main {
+    public static void main(String[] args) {     
+        MainBackgroundThread mbt = new MainBackgroundThread();
+        mbt.start();
 
-    public static void main(String[] args) {
+        MainFrame.openApp(args);
 
+        mbt.doStop();
+        System.out.println("App Closed.");
     }
-
 }

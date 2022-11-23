@@ -1,13 +1,6 @@
 {
-  "java.project.sourcePaths": [
-    "src"
-  ],
+  "java.project.sourcePaths": ["src"],
   "java.project.outputPath": "bin",
-  "java.project.referencedLibraries": [
-    "lib/**/*.jar",
-    "c:\\Program Files (x86)\\MySQL\\Connector J 8.0\\mysql-connector-j-8.0.31.jar",
-    "c:\\Users\\nguye\\Downloads\\postgresql-42.5.0.jar"
-  ],
-  "java.debug.settings.vmArgs": 
-  "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml"
+  "java.project.referencedLibraries": ["lib/**/*.jar"],
+  "java.debug.settings.vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml"
 }
