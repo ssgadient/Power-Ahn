@@ -111,7 +111,7 @@ public class MainFrame extends Application {
                         }
                         else {
                             try {
-                                System.out.println(formatTime(startTime)); System.out.println(formatTime(endTime));
+                                //System.out.println(formatTime(startTime)); System.out.println(formatTime(endTime)); //for testing
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                                 LocalDateTime start = LocalDateTime.parse(formatTime(startTime), formatter);
                                 LocalDateTime end = LocalDateTime.parse(formatTime(endTime), formatter);
@@ -119,7 +119,10 @@ public class MainFrame extends Application {
                                     showMessage("End Time must come after start time", "error");
                                 }
                                 else {
-                                    Task task = new Task(taskName, start, end, appName);
+                                    //System.out.println(appIDs);  //for testing
+                                    String taskAppID = appIDs.get(appName);
+                                    //System.out.println(taskAppID);  //for testing
+                                    Task task = new Task(taskName, start, end, taskAppID);
                                     mainTimer = createTimer((int) Duration.between(start, end).getSeconds());
                                     showMessage("Successfully created\n Task \"" + taskName + "\"!", "success");
                                     start(primaryStage);
