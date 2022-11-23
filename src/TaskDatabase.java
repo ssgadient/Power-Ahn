@@ -202,7 +202,7 @@ public class TaskDatabase {
      * ORDER BY startTime
      * LIMIT N
      */
-    public static HashMap<String, ArrayList<Object>> readClosestDate(int n) {
+    public static ArrayList<Task> readClosestDate(int n) {
         // Create a HashMap storing (String ArrayList<String>)
         HashMap<String, ArrayList<Object>> tasks = new HashMap<>();
 
@@ -295,11 +295,12 @@ public class TaskDatabase {
             System.out.println("ArrayList: " + arraylist);
         }
         
-        
         System.out.println();
         System.out.println("Here is your HashMap of tasks: ");
         System.out.println(tasks);
-        return tasks;
+
+        
+        return myTaskList;
     }
 
     /**
