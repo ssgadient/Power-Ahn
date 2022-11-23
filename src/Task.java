@@ -31,9 +31,9 @@ public class Task {
         this.deadline = null;
     }
 
-    public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime) {
+    public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime, String appID) {
         this.taskName = taskName;
-        this.appID = null;
+        this.appID = appID;
         this.startTime = startTime;
         this.endTime = endTime;
         this.taskDetails = null;
