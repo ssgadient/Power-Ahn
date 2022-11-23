@@ -1,7 +1,6 @@
 import java.io.IOException;
-import java.util.TimerTask;
 
-public class TaskRunner extends TimerTask{
+public class TaskRunner implements Runnable{
     Task task;
 
     public TaskRunner(Task task){
@@ -16,5 +15,4 @@ public class TaskRunner extends TimerTask{
             e.printStackTrace();
         }
     }
-    
 }
