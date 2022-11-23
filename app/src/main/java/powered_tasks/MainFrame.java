@@ -20,7 +20,7 @@ public class MainFrame extends Application {
     Text mainTimer = new Text("");
     Stage primaryStage = new Stage();
 
-    public static void main(String[] args) {
+    public static void openApp(String[] args) {
         launch(args);
     }
 

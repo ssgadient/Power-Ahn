@@ -34,17 +34,6 @@ public class Task {
         this.deadline = null;
     }
 
-    public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime, String appID) {
-        this.taskName = taskName;
-        this.appID = appID;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.taskDetails = null;
-        this.taskSubject = null;
-        this.taskPoints = 0;
-        this.deadline = null;
-    }
-
     // Converting to an int for duration to be able to store into database
     public Duration calculateEstimatedDuration(LocalDateTime start, LocalDateTime end) {
         return Duration.between(start, end);
