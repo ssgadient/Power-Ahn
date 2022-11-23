@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class TaskDatabase {
         insertTask("Tasks", new Task("Test4", LocalDateTime.of(2022, 12, 23, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
         insertTask("Tasks", new Task("Test5", LocalDateTime.of(2022, 12, 24, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
         insertTask("Tasks", new Task("Test6", LocalDateTime.of(2022, 12, 25, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity")); */
-        readClosestDate(2);
+        readClosestDate(1);
     }
 
     /**
@@ -207,6 +206,15 @@ public class TaskDatabase {
         // Create a HashMap storing (String ArrayList<String>)
         HashMap<String, ArrayList<Object>> tasks = new HashMap<>();
 
+        // TEST: Create an array to hold reference to newly created task objects in while loop
+        Task [] myTasks = new Task[10];
+        myTasks[0] = new Task("Test2", LocalDateTime.of(2022, 12, 21, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity");
+        myTasks[0].getAppID();
+
+        // TEST Create separate ArrayList to save memory reference to Task object when created in while loop
+        ArrayList<Task> myTaskList = new ArrayList<>();
+
+
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
 
@@ -238,6 +246,16 @@ public class TaskDatabase {
                 System.out.println(appID); 
                 System.out.println(""); 
 
+                //TEST: Populate myTasks array
+                int i = 1;
+                myTasks[i] = new Task(taskName, startDate, endDate, appID);
+                i++;
+
+
+                // TEST: Populate myTaskList arraylist
+                myTaskList.add(new Task(taskName, startDate, endDate, appID));
+
+
                 // Create and return a new ArrayList that stores taskNames
                 ArrayList<Object> taskInfo = new ArrayList<>();
 
@@ -253,6 +271,13 @@ public class TaskDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // TEST: Successfully printing myTasks array
+         System.out.println(myTasks[1].getTaskName().toString());
+         System.out.println(myTasks[1].getStartTime().toString());
+
+        // TEST: Successfully printing task name string from myTaskList arraylist
+         System.out.println(myTaskList.get(0).getTaskName());
 
         // Iterate through all the key (task names)
         System.out.println("Here are the keys of the hashmap: ");
