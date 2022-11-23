@@ -32,11 +32,11 @@ public class Task {
         this.deadline = null;
     }
 
-    public Task(String taskName, LocalDateTime taskStart, LocalDateTime taskEnd) {
+    public Task(String taskName, LocalDateTime startTime, LocalDateTime endTime, String appID) {
         this.taskName = taskName;
-        this.appID = null;
-        this.taskStart = taskStart;
-        this.taskEnd = taskEnd;
+        this.appID = appID;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.taskDetails = null;
         this.taskSubject = null;
         this.taskPoints = 0;
