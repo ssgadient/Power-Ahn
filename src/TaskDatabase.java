@@ -13,8 +13,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-// import java.time.LocalTime;
-// import java.time.LocalDate;
+import java.util.HashMap;
+import java.time.format.DateTimeFormatter;
 import java.sql.*;
 
 public class TaskDatabase {
@@ -23,6 +23,7 @@ public class TaskDatabase {
     static final String PASS = "sanh2001"; // Local server password
     static final String dataBase = "jdbc:mysql://localhost:3306/Task"; // This URL redirects to 'Task' database
     static final SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss aa");
+    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) throws SQLException {
         // Database 'Task' already created:
@@ -30,19 +31,16 @@ public class TaskDatabase {
         // createTable();
         // dropTable("Tasks");
         // deleteTask("Database JDBC Task");
-        /*
-         * insertTask("Tasks", new Task("Test0", LocalDateTime.of(2022, 11, 13, 10, 0),
-         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
-         * insertTask("Tasks", new Task("Test1", LocalDateTime.of(2022, 11, 14, 10, 0),
-         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
-         * insertTask("Tasks", new Task("Test2", LocalDateTime.of(2022, 11, 15, 10, 0),
-         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
-         * insertTask("Tasks", new Task("Test3", LocalDateTime.of(2022, 11, 16, 10, 0),
-         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
-         * insertTask("Tasks", new Task("Test4", LocalDateTime.of(2022, 11, 17, 10, 0),
-         * LocalDateTime.of(2022, 11, 20, 20, 0), "Unity"));
-         */
-        readTask("taskName, startDate, endDate, duration, appID");
+        // readTask("taskName, startDate, endDate, duration, appID");
+
+
+
+        /* insertTask("Tasks", new Task("Test1", LocalDateTime.of(2022, 12, 20, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
+        insertTask("Tasks", new Task("Test2", LocalDateTime.of(2022, 12, 21, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
+        insertTask("Tasks", new Task("Test3", LocalDateTime.of(2022, 12, 22, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
+        insertTask("Tasks", new Task("Test4", LocalDateTime.of(2022, 12, 23, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
+        insertTask("Tasks", new Task("Test5", LocalDateTime.of(2022, 12, 24, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
+        insertTask("Tasks", new Task("Test6", LocalDateTime.of(2022, 12, 25, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity")); */
         readClosestDate(2);
     }
 
@@ -93,7 +91,7 @@ public class TaskDatabase {
      * Insert tasks into our database table.
      * Paramters: String tableName, object of type Task (taskName, startTime,
      * endTime, appID).
-     * Dynamically calculate and set estimatedDuration.
+     * Dynamically calculate estimatedDuration.
      */
     public static void insertTask(String tableName, Task task) {
         String taskName = task.getTaskName();
@@ -101,10 +99,9 @@ public class TaskDatabase {
         LocalDateTime taskEnd = task.getEndTime(); // split into separate date & time
         String appID = task.getAppID();
 
-        // After new Task object is created, we can calculate and assign the estimated
-        // duration
+        // Calculate estimate duration in seconds
         task.setEstimatedDuration(task.calculateEstimatedDuration(taskStart, taskEnd));
-        int taskEstimatedDuration = (int) task.getEstimatedDuration().toHours(); // typecast getDuration as an integer
+        int taskEstimatedDuration = (int) task.getEstimatedDuration().toSeconds(); // typecast getDuration as an integer to store
 
         // Locate the location of our 'Task' database where our 'Tasks' table resides.
         String dataBase = "jdbc:mysql://localhost:3306/Task";
@@ -197,7 +194,8 @@ public class TaskDatabase {
     }
 
     /**
-     * Return the n closest tasks whose dates are closest to the current time. Returns an ArrayList containing the taskName(s).
+     * Return the n closest tasks whose dates are closest to the current time.
+     * Returns an ArrayList containing the taskName(s).
      * 
      * Query:
      * SELECT taskName
@@ -206,40 +204,76 @@ public class TaskDatabase {
      * ORDER BY startTime
      * LIMIT N
      */
-    public static ArrayList<String> readClosestDate(int n) {
-        // Create and return a new ArrayList that stores taskNames
-        ArrayList<String> tasks = new ArrayList<String>();
+    public static HashMap<String, ArrayList<Object>> readClosestDate(int n) {
+        // Create a HashMap storing (String ArrayList<String>)
+        HashMap<String, ArrayList<Object>> tasks = new HashMap<>();
 
         try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
                 Statement stmt = conn.createStatement();) {
 
             // Query to select startDates from Tasks table
-            String readQuery = "SELECT taskName FROM Tasks WHERE startDate > NOW() ORDER BY startDate LIMIT " + n;
+            String readQuery = "SELECT * FROM Tasks WHERE startDate > NOW() ORDER BY startDate LIMIT " + n;
 
             // Store query results into ResultSet
             ResultSet queryResults = stmt.executeQuery(readQuery);
 
-            System.out.println("Here are the " + n + " closest tasks.");
+            System.out.println("Here are the " + n + " closest tasks:");
             // Extract query data from result set
             while (queryResults.next()) {
-                // Retrieve results by column name
-                System.out.print("Task: " + queryResults.getString("taskName"));
-                System.out.println("");
+                // Retrieve results by column names and create new variables for them:
+                String taskName = queryResults.getString("taskName");
 
-                // Insert each taskName into the ArrayList
-                tasks.add(queryResults.getString("taskName"));
+                // Convert startDate String into a LocalDate object with formatter and parse() method
+                String startDate_string = queryResults.getString("startDate");
+                LocalDateTime startDate = LocalDateTime.parse(startDate_string, formatter);
+
+                // Convert endDate String into a LocalDate object with formatter and parse() method
+                String endDate_string = queryResults.getString("endDate");
+                LocalDateTime endDate = LocalDateTime.parse(endDate_string, formatter);
+
+                String appID = queryResults.getString("appID");
+
+                System.out.println(taskName);
+                System.out.println(startDate);
+                System.out.println(endDate);
+                System.out.println(appID); 
+                System.out.println(""); 
+
+                // Create and return a new ArrayList that stores taskNames
+                ArrayList<Object> taskInfo = new ArrayList<>();
+
+                // Populate ArrayList taskInfo with information about the task:
+                taskInfo.add(startDate);
+                taskInfo.add(endDate);
+                taskInfo.add(appID); 
+
+                // Then, populate HashMap with each (task name, task info array):
+                tasks.put(taskName, taskInfo);
             }
-
-            // Success messages:
-            System.out.println("");
-            System.out.println("ArrayList:");
-            System.out.println(tasks);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return tasks;
 
+        // Iterate through all the key (task names)
+        System.out.println("Here are the keys of the hashmap: ");
+        for (String taskName : tasks.keySet()) {
+            System.out.println("Task: " + taskName);
+        }
+
+        System.out.println();
+        
+        // Iterate through all the values (ArrayList of task info)
+        System.out.println("Here are the values of the hashmap: ");
+        for (ArrayList<Object> arraylist : tasks.values()) {
+            System.out.println("ArrayList: " + arraylist);
+        }
+        
+        
+        System.out.println();
+        System.out.println("Here is your HashMap of tasks: ");
+        System.out.println(tasks);
+        return tasks;
     }
 
     /**

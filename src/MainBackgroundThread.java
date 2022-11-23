@@ -1,6 +1,6 @@
-import java.util.Date;
+//import java.util.Date;
 import java.util.Timer;
-import java.util.TimerTask;
+//import java.util.TimerTask;
 
 public class MainBackgroundThread extends Thread{
    //does a Database query every 5 seconds
