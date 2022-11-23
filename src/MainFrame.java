@@ -109,7 +109,6 @@ public class MainFrame extends Application {
                         }
                         else {
                             try {
-                                System.out.println(formatTime(startTime)); System.out.println(formatTime(endTime));
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                                 LocalDateTime start = LocalDateTime.parse(formatTime(startTime), formatter);
                                 LocalDateTime end = LocalDateTime.parse(formatTime(endTime), formatter);

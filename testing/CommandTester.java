@@ -7,7 +7,7 @@ public class CommandTester {
           System.out.println("Executing Brave.exe");
  
           // create a process and execute Brave.exe
-          Process process = Runtime.getRuntime().exec(new String[]{"cmd", "/c", "explorer shell:Appsfolder\\Brave"});
+          Process process = Runtime.getRuntime().exec(new String[]{"cmd", "/c", "explorer shell:Appsfolder\\Chrome"});
  
        } catch (Exception ex) {
           ex.printStackTrace();
