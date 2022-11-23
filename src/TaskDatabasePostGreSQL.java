@@ -1,5 +1,4 @@
 // Connect Java with PostGreSQL driver
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 
