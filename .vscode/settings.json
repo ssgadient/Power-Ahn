@@ -1,6 +1,10 @@
 {
-  "java.project.sourcePaths": ["src"],
-  "java.project.outputPath": "bin",
-  "java.project.referencedLibraries": ["lib/**/*.jar"],
-  "java.debug.settings.vmArgs": "--module-path ./lib/javafx-sdk-19/lib --add-modules javafx.controls,javafx.fxml"
+    "java.configuration.runtimes": [
+        {
+          "name": "JavaSE-17",
+          "path": "C:/Program Files/Eclipse Adoptium/jdk-17.0.5.8-hotspot/",
+        },
+    ],
+    "java.jdt.ls.java.home": "C:/Program Files/Eclipse Adoptium/jdk-17.0.5.8-hotspot/",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

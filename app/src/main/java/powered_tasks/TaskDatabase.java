@@ -18,12 +18,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.format.DateTimeFormatter;
 import java.sql.*;
+import java.util.Properties;
 
 public class TaskDatabase {
-    static final String DB_URL = "jdbc:mysql://localhost:3306"; // My local host 
-    static final String USER = "root"; // My local server username
-    static final String PASS = "sanh2001"; // My local server password
-    static final String dataBase = "jdbc:mysql://localhost:3306/Task"; // My local URL that redirects to the 'Task' database (if exists)
+    //static final String DB_URL = "jdbc:mysql://sql.freedb.tech"; // My local host 
+    //static final String USER = "freedb_Power Ahn"; // My local server username
+    //static final String PASS = "$SG4XXtHeKU&CeM"; // My local server password
+    //static final String dataBase = "jdbc:mysql://sql.freedb.tech/freedb_TaskApplication"; // My local URL that redirects to the 'Task' database (if exists)
+
+    private static final String framework = "embedded";
+
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // Reformatting date
 
     /**
@@ -50,7 +54,7 @@ public class TaskDatabase {
      */
     public static void createDatabase(String database) {
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
             // Set SQL command here:
             String sql = "CREATE DATABASE " + database;
@@ -69,7 +73,7 @@ public class TaskDatabase {
      * The table's primary key is the task name.
      **/
     public static void createTable() {
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Populate table with columns:
@@ -108,7 +112,7 @@ public class TaskDatabase {
         int taskEstimatedDuration = (int) task.getEstimatedDuration().toSeconds(); // typecast getDuration as an integer to store
 
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             System.out.println("Inserting records into the table...");
@@ -162,7 +166,7 @@ public class TaskDatabase {
      */
     public static void readTask(String selectColumns) {
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Set read Query:
@@ -216,9 +220,9 @@ public class TaskDatabase {
         // TEST Create separate ArrayList to save memory reference to Task object when created in while loop
         ArrayList<Task> myTaskList = new ArrayList<>();
 
-
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
-                Statement stmt = conn.createStatement();) {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
+            Statement stmt = conn.createStatement();
 
             // Query to select startDates from Tasks table
             String readQuery = "SELECT * FROM Tasks WHERE startDate > NOW() ORDER BY startDate LIMIT " + n;
@@ -300,8 +304,6 @@ public class TaskDatabase {
         System.out.println();
         System.out.println("Here is your HashMap of tasks: ");
         System.out.println(tasks);
-
-        
         return myTaskList;
     }
 
@@ -315,7 +317,7 @@ public class TaskDatabase {
     public static void updateTask(String tableName, String attribute, String newValue, String condition,
             String conditionValue) {
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Update command:
@@ -341,7 +343,7 @@ public class TaskDatabase {
      * Deletes a task(s) wit name of @param taskName from table 'Tasks'
      */
     public static void deleteTask(String taskName) {
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Delete query:
@@ -368,7 +370,7 @@ public class TaskDatabase {
      * Drops database with name @param database
      */
     public static void dropDatabase(String database) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
             String sql = "DROP DATABASE " + database;
             stmt.executeUpdate(sql);
@@ -385,7 +387,7 @@ public class TaskDatabase {
         String dataBase = "jdbc:mysql://localhost:3306/Task";
 
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
             String dropQuery = "DROP TABLE " + tableName;
             stmt.executeUpdate(dropQuery);
@@ -396,4 +398,53 @@ public class TaskDatabase {
 
     }
 
+    public static void shutdownDatabase(){
+        try
+        {
+            // the shutdown=true attribute shuts down Derby
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+
+            // To shut down a specific database only, but keep the
+            // engine running (for example for connecting to other
+            // databases), specify a database in the connection URL:
+            //DriverManager.getConnection("jdbc:derby:" + dbName + ";shutdown=true");
+        }
+        catch (SQLException se)
+        {
+            if (( (se.getErrorCode() == 50000)
+                     && ("XJ015".equals(se.getSQLState()) ))) {
+                // we got the expected exception
+                System.out.println("Derby shut down normally");
+                // Note that for single database shutdown, the expected
+                // SQL state is "08006", and the error code is 45000.
+            } else {
+                // if the error code or SQLState is different, we have
+                // an unexpected exception (shutdown failed)
+                System.err.println("Derby did not shut down normally");
+                printSQLException(se);
+            }
+        }
+    }
+
+     /**
+     * Prints details of an SQLException chain to <code>System.err</code>.
+     * Details included are SQL State, Error code, Exception message.
+     *
+     * @param e the SQLException from which to print details.
+     */
+    public static void printSQLException(SQLException e)
+    {
+        // Unwraps the entire exception chain to unveil the real cause of the
+        // Exception.
+        while (e != null)
+        {
+            System.err.println("\n----- SQLException -----");
+            System.err.println("  SQL State:  " + e.getSQLState());
+            System.err.println("  Error Code: " + e.getErrorCode());
+            System.err.println("  Message:    " + e.getMessage());
+            // for stack traces, refer to derby.log or uncomment this:
+            //e.printStackTrace(System.err);
+            e = e.getNextException();
+        }
+    }
 }

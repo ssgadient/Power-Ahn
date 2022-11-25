@@ -126,4 +126,8 @@ public class Task {
     public void showUI() {
 
     }
+
+    public String toString(){
+        return "Taskname: " + taskName + ", Start Time: " + taskStart + ", End Time: " + taskEnd + ", App ID: " + appID;
+    }
 }
