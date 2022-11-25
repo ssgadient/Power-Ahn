@@ -123,13 +123,14 @@ public class MainFrame extends Application {
                                     String taskAppID = appIDs.get(appName);
                                     //System.out.println(taskAppID);  //for testing
                                     Task task = new Task(taskName, start, end, taskAppID);
+                                    TaskDatabase.insertTask("Tasks", task);
                                     mainTimer = createTimer((int) Duration.between(start, end).getSeconds());
                                     showMessage("Successfully created\n Task \"" + taskName + "\"!", "success");
                                     start(primaryStage);
                                     primaryStage.setMaximized(true);
                                     taskStage.close();
-                                    TaskRunner runner = new TaskRunner(task);
-                                    runner.run();
+                                    //TaskRunner runner = new TaskRunner(task);
+                                    //runner.run();
                                 }
                             } catch(Exception e) {
                                 showMessage("Incorrect Date Format", "error");
