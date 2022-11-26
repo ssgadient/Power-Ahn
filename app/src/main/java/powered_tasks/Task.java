@@ -3,6 +3,7 @@ package powered_tasks;
 import java.time.*;
 // import java.net.URL;
 // import java.io.File;
+import java.util.UUID;
 
 public class Task {
     private String taskName;
@@ -14,6 +15,7 @@ public class Task {
     private String taskSubject;
     private int taskPoints;
     private LocalDateTime deadline;
+    private String taskUUID;
     // private URL taskLink;
     // private File taskFile;
 
@@ -22,7 +24,7 @@ public class Task {
     }
 
     // Removed estimatedDuration from parameters, because can only calculate it after creating the task. 
-    public Task(String taskName, LocalDateTime taskStart, LocalDateTime taskEnd, String appID) {
+    public Task(String taskName, LocalDateTime taskStart, LocalDateTime taskEnd, String appID, String taskUUID) {
         this.taskName = taskName;
         this.taskStart = taskStart;
         this.taskEnd = taskEnd;
@@ -32,6 +34,7 @@ public class Task {
         this.taskSubject = null;
         this.taskPoints = 0;
         this.deadline = null;
+        this.taskUUID = taskUUID;
     }
 
     /*
@@ -87,6 +90,10 @@ public class Task {
         return this.deadline;
     }
 
+    public String getTaskUUID(){
+        return this.taskUUID;
+    }
+
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
@@ -123,7 +130,15 @@ public class Task {
         this.deadline = deadline;
     }
 
+    public void setTaskUUID(String taskUUID){
+        this.taskUUID = taskUUID;
+    }
+
     public void showUI() {
 
+    }
+
+    public String toString(){
+        return "Taskname: " + taskName + ", Start Time: " + taskStart + ", End Time: " + taskEnd + ", App ID: " + appID + ", Task UUID: " + taskUUID;
     }
 }

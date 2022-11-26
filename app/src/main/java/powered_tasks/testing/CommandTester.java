@@ -1,3 +1,5 @@
+package powered_tasks.testing;
+
 public class CommandTester {
 
     public static void main(String[] args) {

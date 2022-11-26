@@ -16,6 +16,9 @@ repositories {
 
 dependencies {
     implementation("mysql:mysql-connector-java:8.0.31")
+    implementation("org.apache.derby:derby:10.16.1.1")
+    implementation("org.apache.derby:derbyshared:10.15.2.0")
+    implementation("org.apache.derby:derbytools:10.15.2.0")
 }
 
 javafx {
@@ -25,7 +28,7 @@ javafx {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 

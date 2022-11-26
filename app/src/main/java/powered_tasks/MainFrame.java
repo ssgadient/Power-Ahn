@@ -115,6 +115,7 @@ public class MainFrame extends Application {
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                                 LocalDateTime start = LocalDateTime.parse(formatTime(startTime), formatter);
                                 LocalDateTime end = LocalDateTime.parse(formatTime(endTime), formatter);
+                                System.out.println(start); System.out.println(end);
                                 if (Duration.between(start, end).compareTo(Duration.ZERO) < 0) {
                                     showMessage("End Time must come after start time", "error");
                                 }
@@ -122,16 +123,19 @@ public class MainFrame extends Application {
                                     //System.out.println(appIDs);  //for testing
                                     String taskAppID = appIDs.get(appName);
                                     //System.out.println(taskAppID);  //for testing
-                                    Task task = new Task(taskName, start, end, taskAppID);
+                                    Task task = new Task(taskName, start, end, taskAppID, UUID.randomUUID().toString());
+                                    TaskDatabase.insertTask("Tasks", task);
+                                    TaskDatabase.readTask("taskName, startDate, endDate, duration, appID, taskUUID");
                                     mainTimer = createTimer((int) Duration.between(start, end).getSeconds());
                                     showMessage("Successfully created\n Task \"" + taskName + "\"!", "success");
                                     start(primaryStage);
                                     primaryStage.setMaximized(true);
                                     taskStage.close();
-                                    TaskRunner runner = new TaskRunner(task);
-                                    runner.run();
+                                    //TaskRunner runner = new TaskRunner(task);
+                                    //runner.run();
                                 }
                             } catch(Exception e) {
+                                System.out.println(e);
                                 showMessage("Incorrect Date Format", "error");
                             }
                         }
@@ -160,7 +164,9 @@ public class MainFrame extends Application {
                             if (hours == 10 || hours == 11) {
                                 reverseDate = reverseDate.substring(0, reverseDate.length() - 8) + hours + reverseDate.substring(reverseDate.length() - 6, reverseDate.length());
                             }
-                            reverseDate = reverseDate.substring(0, reverseDate.length() - 8) + "0" + hours + reverseDate.substring(reverseDate.length() - 6, reverseDate.length());
+                            else {
+                                reverseDate = reverseDate.substring(0, reverseDate.length() - 8) + "0" + hours + reverseDate.substring(reverseDate.length() - 6, reverseDate.length());
+                            }
                         }
                         return reverseDate;
                     }

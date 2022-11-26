@@ -8,7 +8,7 @@ import java.util.*;
 public class AUMIDRetriever {
     public static HashMap<String, String> getAUMIDs() {
         try {
-            Process aumidGetProcess = Runtime.getRuntime().exec(new String[]{"powershell.exe", "/c", "Get-StartApps | Out-String -width 20000"}); // Executing the command
+            Process aumidGetProcess = Runtime.getRuntime().exec(new String[]{"powershell.exe", "/c", "Get-StartApps | Out-String -width 2000"}); // Executing the command
             aumidGetProcess.getOutputStream().close(); // Getting the results
             
             BufferedReader out = new BufferedReader(new InputStreamReader(aumidGetProcess.getInputStream())); //Processing the results
