@@ -5,4 +5,7 @@
 build
 
 #Ignore binary files
-class
+.class
+
+.gradletasknamecache
+gradle-app.setting
