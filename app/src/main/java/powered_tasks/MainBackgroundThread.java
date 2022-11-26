@@ -22,10 +22,10 @@ public class MainBackgroundThread extends Thread{
             for (Task task : queriedTasks){
                 if (!executedTasks.contains(task.getTaskUUID())){
                     long delayTimeSeconds = (task.getStartTime().toLocalTime().toSecondOfDay()) - (LocalDateTime.now().toLocalTime().toSecondOfDay());
-                    System.out.println(delayTimeSeconds);
+                    //System.out.println(delayTimeSeconds);
                     taskExecutor.schedule(new TaskRunner(task), delayTimeSeconds, TimeUnit.SECONDS);
                     executedTasks.add(task.getTaskUUID());
-                    System.out.println(executedTasks.toString());
+                    //System.out.println(executedTasks.toString());
                 }
             }
         }
