@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
-Sat Nov 26 00:45:10 PST 2022D001 : [0] The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046), [1] a816c00e-0184-b31c-a6e4-00000e8a1790, [2] C:\Documents\GitHub\Power-Ahn\app\taskDB, [3] jdk.internal.loader.ClassLoaders$AppClassLoader@4f023edb, [4] file:/C:/Users/pokem/.gradle/caches/modules-2/files-2.1/org.apache.derby/derby/10.16.1.1/f9ca2054b3e33ec3f3f19df4a7490352d82de54a/derby-10.16.1.1.jar
+Sat Nov 26 01:10:27 PST 2022D001 : [0] The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046), [1] a816c00e-0184-b333-cd62-00000e884850, [2] C:\Documents\GitHub\Power-Ahn\app\taskDB, [3] jdk.internal.loader.ClassLoaders$AppClassLoader@4f023edb, [4] file:/C:/Users/pokem/.gradle/caches/modules-2/files-2.1/org.apache.derby/derby/10.16.1.1/f9ca2054b3e33ec3f3f19df4a7490352d82de54a/derby-10.16.1.1.jar
 java.vendor=Eclipse Adoptium
 java.runtime.version=17.0.5+8
 user.dir=C:\Documents\GitHub\Power-Ahn\app
@@ -8,3 +8,8 @@ os.arch=amd64
 os.version=10.0
 derby.system.home=null
 C005 : [0] 
+----------------------------------------------------------------
+J003 : [0] Sat Nov 26 01:13:32 PST 2022
+----------------------------------------------------------------
+Sat Nov 26 01:13:32 PST 2022D002 : [0] a816c00e-0184-b333-cd62-00000e884850, [1] C:\Documents\GitHub\Power-Ahn\app\taskDB, [2] jdk.internal.loader.ClassLoaders$AppClassLoader@4f023edb
+----------------------------------------------------------------
