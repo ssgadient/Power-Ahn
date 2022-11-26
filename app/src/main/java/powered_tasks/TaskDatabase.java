@@ -15,15 +15,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.time.format.DateTimeFormatter;
 import java.sql.*;
 
 public class TaskDatabase {
-    static final String DB_URL = "jdbc:mysql://localhost:3306"; // My local host 
-    static final String USER = "root"; // My local server username
-    static final String PASS = "sanh2001"; // My local server password
-    static final String dataBase = "jdbc:mysql://localhost:3306/Task"; // My local URL that redirects to the 'Task' database (if exists)
+    //static final String DB_URL = "jdbc:mysql://sql.freedb.tech"; // My local host 
+    //static final String USER = "freedb_Power Ahn"; // My local server username
+    //static final String PASS = "$SG4XXtHeKU&CeM"; // My local server password
+    //static final String dataBase = "jdbc:mysql://sql.freedb.tech/freedb_TaskApplication"; // My local URL that redirects to the 'Task' database (if exists)
+
     static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // Reformatting date
 
     /**
@@ -41,7 +41,7 @@ public class TaskDatabase {
         insertTask("Tasks", new Task("Test4", LocalDateTime.of(2022, 12, 23, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
         insertTask("Tasks", new Task("Test5", LocalDateTime.of(2022, 12, 24, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity"));
         insertTask("Tasks", new Task("Test6", LocalDateTime.of(2022, 12, 25, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity")); */
-        readClosestDate(1);
+        //readClosestDate(1, "taskName, startDate, endDate, duration, appID, taskUUID");
     }
 
     /**
@@ -50,7 +50,7 @@ public class TaskDatabase {
      */
     public static void createDatabase(String database) {
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
             // Set SQL command here:
             String sql = "CREATE DATABASE " + database;
@@ -69,17 +69,18 @@ public class TaskDatabase {
      * The table's primary key is the task name.
      **/
     public static void createTable() {
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Populate table with columns:
             String createTableCommand = "CREATE TABLE Tasks " +
                     "(taskName VARCHAR(20) not NULL, " +
-                    " startDate DATETIME, " +
-                    " endDate DATETIME, " +
+                    " startDate TIMESTAMP, " +
+                    " endDate TIMESTAMP, " +
                     " duration INT, " +
-                    " appID VARCHAR(20), " +
-                    " PRIMARY KEY ( taskName ))";
+                    " appID VARCHAR(200), " +
+                    " taskUUID VARCHAR(36) not NULL, " +
+                    " PRIMARY KEY ( taskUUID ))";
 
             // Execute command
             stmt.executeUpdate(createTableCommand);
@@ -102,13 +103,14 @@ public class TaskDatabase {
         LocalDateTime taskStart = task.getStartTime(); // split into separate date & time
         LocalDateTime taskEnd = task.getEndTime(); // split into separate date & time
         String appID = task.getAppID();
+        String taskUUID = task.getTaskUUID();
 
         // Calculate estimate duration in seconds
         task.setEstimatedDuration(task.calculateEstimatedDuration(taskStart, taskEnd));
         int taskEstimatedDuration = (int) task.getEstimatedDuration().toSeconds(); // typecast getDuration as an integer to store
 
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             System.out.println("Inserting records into the table...");
@@ -127,7 +129,7 @@ public class TaskDatabase {
             // java.sql.Time task_endTime = java.sql.Time.valueOf(endTime);
 
             // Create insert query:
-            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(insertQuery);
 
             // Turn time object into a String to insert into Database
@@ -145,6 +147,8 @@ public class TaskDatabase {
             // pstmt.setTime(5, task_endTime);
             pstmt.setInt(4, taskEstimatedDuration);
             pstmt.setString(5, appID);
+            pstmt.setString(6, taskUUID);
+
             pstmt.execute();
 
             // Success message:
@@ -162,7 +166,7 @@ public class TaskDatabase {
      */
     public static void readTask(String selectColumns) {
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Set read Query:
@@ -180,6 +184,7 @@ public class TaskDatabase {
                 System.out.print(", endDate: " + queryResults.getString("endDate"));
                 System.out.print(", taskEstimatedDuration: " + queryResults.getString("duration"));
                 System.out.print(", App ID: " + queryResults.getString("appID"));
+                System.out.print(", Task UUID: " + queryResults.getString("taskUUID"));
 
                 // Add a empty line for readability:
                 System.out.println("");
@@ -204,104 +209,53 @@ public class TaskDatabase {
      * ORDER BY startTime
      * LIMIT N
      */
-    public static HashMap<String, ArrayList<Object>> readClosestDate(int n) {
-        // Create a HashMap storing (String ArrayList<String>)
-        HashMap<String, ArrayList<Object>> tasks = new HashMap<>();
-
-        // TEST: Create an array to hold reference to newly created task objects in while loop
-        Task [] myTasks = new Task[10];
-        myTasks[0] = new Task("Test2", LocalDateTime.of(2022, 12, 21, 10, 0), LocalDateTime.of(2022, 12, 29, 20, 0), "Unity");
-        myTasks[0].getAppID();
-
-        // TEST Create separate ArrayList to save memory reference to Task object when created in while loop
+    public static ArrayList<Task> readClosestDate(int n, String selectColumns) {
+        // Create separate ArrayList to save memory reference to Task object when created in while loop
         ArrayList<Task> myTaskList = new ArrayList<>();
 
-
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
-                Statement stmt = conn.createStatement();) {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
+            Statement stmt = conn.createStatement();
 
             // Query to select startDates from Tasks table
-            String readQuery = "SELECT * FROM Tasks WHERE startDate > NOW() ORDER BY startDate LIMIT " + n;
+            String readQuery = "SELECT * FROM Tasks WHERE startDate > CURRENT_TIMESTAMP ORDER BY startDate FETCH NEXT " + n + " ROWS ONLY";
 
             // Store query results into ResultSet
             ResultSet queryResults = stmt.executeQuery(readQuery);
 
             System.out.println("Here are the " + n + " closest tasks:");
+
             // Extract query data from result set
             while (queryResults.next()) {
                 // Retrieve results by column names and create new variables for them:
                 String taskName = queryResults.getString("taskName");
 
                 // Convert startDate String into a LocalDate object with formatter and parse() method
-                String startDate_string = queryResults.getString("startDate");
+                String startDate_string = queryResults.getString("startDate").substring(0, 19);
                 LocalDateTime startDate = LocalDateTime.parse(startDate_string, formatter);
 
                 // Convert endDate String into a LocalDate object with formatter and parse() method
-                String endDate_string = queryResults.getString("endDate");
+                String endDate_string = queryResults.getString("endDate").substring(0, 19);
                 LocalDateTime endDate = LocalDateTime.parse(endDate_string, formatter);
 
                 String appID = queryResults.getString("appID");
+                String taskUUID = queryResults.getString("taskUUID");
 
-                System.out.println(taskName);
-                System.out.println(startDate);
-                System.out.println(endDate);
-                System.out.println(appID); 
-                System.out.println(""); 
+                //System.out.println(taskName);
+                //System.out.println(startDate_string);
+                //System.out.println(endDate_string);
+                //System.out.println(appID);
+                //System.out.println(taskUUID);  
+                //System.out.println(""); 
 
-                //TEST: Populate myTasks array
-                int i = 1;
-                myTasks[i] = new Task(taskName, startDate, endDate, appID);
-                i++;
-
-
-                // TEST: Populate myTaskList arraylist
-                // Note that new objects are always stored in Heap memory, while the reference to those objects 
-                // are stored in Stack memory.
-                myTaskList.add(new Task(taskName, startDate, endDate, appID));
-
-
-                // Create and return a new ArrayList that stores taskNames
-                ArrayList<Object> taskInfo = new ArrayList<>();
-
-                // Populate ArrayList taskInfo with information about the task:
-                taskInfo.add(startDate);
-                taskInfo.add(endDate);
-                taskInfo.add(appID); 
-
-                // Then, populate HashMap with each (task name, task info array):
-                tasks.put(taskName, taskInfo);
+                myTaskList.add(new Task(taskName, startDate, endDate, appID, taskUUID));
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } 
+        catch (SQLException e) {
+            System.out.println(e);
         }
-
-        // TEST: Successfully printing myTasks array
-         System.out.println(myTasks[1].getTaskName().toString());
-         System.out.println(myTasks[1].getStartTime().toString());
-
-        // TEST: Successfully printing task name string from myTaskList arraylist
-         System.out.println(myTaskList.get(0).getTaskName());
-
-        // Iterate through all the key (task names)
-        System.out.println("Here are the keys of the hashmap: ");
-        for (String taskName : tasks.keySet()) {
-            System.out.println("Task: " + taskName);
-        }
-
-        System.out.println();
-        
-        // Iterate through all the values (ArrayList of task info)
-        System.out.println("Here are the values of the hashmap: ");
-        for (ArrayList<Object> arraylist : tasks.values()) {
-            System.out.println("ArrayList: " + arraylist);
-        }
-        
-        
-        System.out.println();
-        System.out.println("Here is your HashMap of tasks: ");
-        System.out.println(tasks);
-        return tasks;
+        return myTaskList;
     }
 
     /**
@@ -314,7 +268,7 @@ public class TaskDatabase {
     public static void updateTask(String tableName, String attribute, String newValue, String condition,
             String conditionValue) {
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Update command:
@@ -340,7 +294,7 @@ public class TaskDatabase {
      * Deletes a task(s) wit name of @param taskName from table 'Tasks'
      */
     public static void deleteTask(String taskName) {
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
 
             // Delete query:
@@ -367,7 +321,7 @@ public class TaskDatabase {
      * Drops database with name @param database
      */
     public static void dropDatabase(String database) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
             String sql = "DROP DATABASE " + database;
             stmt.executeUpdate(sql);
@@ -381,10 +335,8 @@ public class TaskDatabase {
      * Drops table with name @param tableName
      */
     public static void dropTable(String tableName) {
-        String dataBase = "jdbc:mysql://localhost:3306/Task";
-
         // Open a connection
-        try (Connection conn = DriverManager.getConnection(dataBase, USER, PASS);
+        try (Connection conn = DriverManager.getConnection("jdbc:derby:taskDB;create=true");
                 Statement stmt = conn.createStatement();) {
             String dropQuery = "DROP TABLE " + tableName;
             stmt.executeUpdate(dropQuery);
@@ -392,7 +344,55 @@ public class TaskDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
+    public static void shutdownDatabase(){
+        try
+        {
+            // the shutdown=true attribute shuts down Derby
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+
+            // To shut down a specific database only, but keep the
+            // engine running (for example for connecting to other
+            // databases), specify a database in the connection URL:
+            //DriverManager.getConnection("jdbc:derby:" + dbName + ";shutdown=true");
+        }
+        catch (SQLException se)
+        {
+            if (( (se.getErrorCode() == 50000)
+                     && ("XJ015".equals(se.getSQLState()) ))) {
+                // we got the expected exception
+                System.out.println("Derby shut down normally");
+                // Note that for single database shutdown, the expected
+                // SQL state is "08006", and the error code is 45000.
+            } else {
+                // if the error code or SQLState is different, we have
+                // an unexpected exception (shutdown failed)
+                System.err.println("Derby did not shut down normally");
+                printSQLException(se);
+            }
+        }
+    }
+
+     /**
+     * Prints details of an SQLException chain to <code>System.err</code>.
+     * Details included are SQL State, Error code, Exception message.
+     *
+     * @param e the SQLException from which to print details.
+     */
+    public static void printSQLException(SQLException e)
+    {
+        // Unwraps the entire exception chain to unveil the real cause of the
+        // Exception.
+        while (e != null)
+        {
+            System.err.println("\n----- SQLException -----");
+            System.err.println("  SQL State:  " + e.getSQLState());
+            System.err.println("  Error Code: " + e.getErrorCode());
+            System.err.println("  Message:    " + e.getMessage());
+            // for stack traces, refer to derby.log or uncomment this:
+            //e.printStackTrace(System.err);
+            e = e.getNextException();
+        }
+    }
 }
