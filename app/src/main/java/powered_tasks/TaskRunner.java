@@ -12,6 +12,7 @@ public class TaskRunner implements Runnable{
     public void run(){
         String appRunCommand = "explorer shell:Appsfolder\\" + task.getAppID();
         try {
+            MainFrame.startTimerOnUI(task.getStartTime(), task.getEndTime());
             Process process = Runtime.getRuntime().exec(new String[]{"cmd", "/c", appRunCommand});
         } catch (IOException e) {
             e.printStackTrace();

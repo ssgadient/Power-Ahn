@@ -17,7 +17,7 @@ import java.util.*;
 
 public class MainFrame extends Application {
 
-    Text mainTimer = new Text("");
+    static Text mainTimer = new Text("");
     Stage primaryStage = new Stage();
 
     public static void openApp(String[] args) {
@@ -124,9 +124,9 @@ public class MainFrame extends Application {
                                     String taskAppID = appIDs.get(appName);
                                     //System.out.println(taskAppID);  //for testing
                                     Task task = new Task(taskName, start, end, taskAppID, UUID.randomUUID().toString());
+                                    //
                                     TaskDatabase.insertTask("Tasks", task);
                                     TaskDatabase.readTask("taskName, startDate, endDate, duration, appID, taskUUID");
-                                    mainTimer = createTimer((int) Duration.between(start, end).getSeconds());
                                     showMessage("Successfully created\n Task \"" + taskName + "\"!", "success");
                                     start(primaryStage);
                                     primaryStage.setMaximized(true);
@@ -233,7 +233,7 @@ public class MainFrame extends Application {
                                 showMessage("Please enter\n positive integers", "error");
                             }
                             else {
-                                mainTimer = createTimer(3600*Integer.parseInt(hours) + 60*Integer.parseInt(minutes) + Integer.parseInt(seconds));
+                                mainTimer = updateTimer(3600*Integer.parseInt(hours) + 60*Integer.parseInt(minutes) + Integer.parseInt(seconds));
                                 start(primaryStage);
                                 setTimerStage.close();
                             }
@@ -267,7 +267,7 @@ public class MainFrame extends Application {
         errorStage.showAndWait();
     }
 
-    public Text createTimer(int seconds) {
+    public static Text updateTimer(int seconds) {
         Text timerText = new Text("");
         Timer timer = new Timer();
 
@@ -314,4 +314,19 @@ public class MainFrame extends Application {
         return timerText;
     }
 
+    public static void startTimerOnUI(LocalDateTime start, LocalDateTime end){
+
+        System.out.println(mainTimer);
+        System.out.println((int) Duration.between(start, end).getSeconds());
+
+        mainTimer.setX(700); mainTimer.setY(200);
+        mainTimer.setFont(Font.font("Times New Roman", 60));
+        mainTimer.setFill(Color.GREEN);
+
+        System.out.println(mainTimer);
+    }
+
+    public static void setText(String text){
+        mainTimer.setText(text);
+    }
 }
