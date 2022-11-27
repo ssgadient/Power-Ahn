@@ -315,18 +315,55 @@ public class MainFrame extends Application {
     }
 
     public static void startTimerOnUI(LocalDateTime start, LocalDateTime end){
-
         System.out.println(mainTimer);
         System.out.println((int) Duration.between(start, end).getSeconds());
+        int seconds = (int) Duration.between(start, end).getSeconds();
+
+        Timer timer = new Timer();
+
+        TimerTask timerTask = new TimerTask() {
+            public int innerSeconds = seconds;
+
+            @Override
+            public void run() {
+                int h = innerSeconds / 3600;
+                int m = (innerSeconds % 3600) / 60;
+                int s = innerSeconds % 60;
+                String hours = Integer.toString(h);
+                String minutes = Integer.toString(m);
+                String seconds = Integer.toString(s);
+                if (h < 10) {
+                    hours = "0" + h;
+                }
+                if (m < 10) {
+                    minutes = "0" + m;
+                }
+                if (s < 10) {
+                    seconds = "0" + s;
+                }
+                mainTimer.setText("" + hours + ":" + minutes + ":" + seconds);
+                setSeconds(getSeconds() - 1);
+                if (innerSeconds < 0) {
+                    timer.cancel();
+                }
+            }
+
+            public int getSeconds() {
+                return innerSeconds;
+            }
+
+            public void setSeconds(int innerSeconds) {
+                this.innerSeconds = innerSeconds;
+            }
+        };
+
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+
 
         mainTimer.setX(700); mainTimer.setY(200);
         mainTimer.setFont(Font.font("Times New Roman", 60));
         mainTimer.setFill(Color.GREEN);
 
         System.out.println(mainTimer);
-    }
-
-    public static void setText(String text){
-        mainTimer.setText(text);
     }
 }
