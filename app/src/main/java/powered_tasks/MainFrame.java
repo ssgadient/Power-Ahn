@@ -16,9 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MainFrame extends Application {
-
-    static Text mainTimer = new Text("");
     Stage primaryStage = new Stage();
+    static Text mainTimer = new Text("");
 
     public static void openApp(String[] args) {
         launch(args);

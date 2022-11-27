@@ -6,7 +6,7 @@
 
 plugins {
   id("application")
-  id("org.openjfx.javafxplugin") version "0.0.10"
+  id("org.openjfx.javafxplugin") version "0.0.13"
   `java-library`
 }
 
@@ -15,15 +15,14 @@ repositories {
 }
 
 dependencies {
-    implementation("mysql:mysql-connector-java:8.0.31")
     implementation("org.apache.derby:derby:10.16.1.1")
     implementation("org.apache.derby:derbyshared:10.15.2.0")
     implementation("org.apache.derby:derbytools:10.15.2.0")
 }
 
 javafx {
-    sdk = "/libs/javafx-sdk-19"
-    modules("javafx.controls", "javafx.fxml")
+    version = "19"
+    modules("javafx.controls")
 }
 
 java {
@@ -36,4 +35,18 @@ version = "1.2.1"
 
 application {
     mainClass.set("powered_tasks.App")
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "powered_tasks.App"
+    }
+    
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from(sourceSets.main.get().output)
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
 }
