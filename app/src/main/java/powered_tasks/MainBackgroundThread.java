@@ -12,12 +12,12 @@ public class MainBackgroundThread extends Thread{
    //adds tasks from the database to worker threads so that they can execute
    //figure out how to open a timer on the UI when the tasks execute
     private boolean stopThread = false;
-    ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(10);
+    static ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(10);
     ArrayList<String> executedTasks = new ArrayList<String>();
 
     class DBQuery implements Runnable{
         public void run(){
-            ArrayList<Task> queriedTasks = TaskDatabase.readClosestDate(5, "taskName, startDate, endDate, duration, appID, taskUUID");
+            ArrayList<Task> queriedTasks = TaskDatabase.readClosestDate(5);
             //for testing //System.out.println(queriedTasks.toString()); 
             for (Task task : queriedTasks){
                 if (!executedTasks.contains(task.getTaskUUID())){
