@@ -209,7 +209,7 @@ public class TaskDatabase {
      * ORDER BY startTime
      * LIMIT N
      */
-    public static ArrayList<Task> readClosestDate(int n, String selectColumns) {
+    public static ArrayList<Task> readClosestDate(int n) {
         // Create separate ArrayList to save memory reference to Task object when created in while loop
         ArrayList<Task> myTaskList = new ArrayList<>();
 
