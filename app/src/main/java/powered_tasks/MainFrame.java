@@ -131,7 +131,6 @@ public class MainFrame extends Application {
                                     showMessage("End Time must come after start time", "error");
                                 }
                                 else {
-                                    timer.cancel();
                                     //System.out.println(appIDs);  //for testing
                                     String taskAppID = appIDs.get(appName);
                                     //System.out.println(taskAppID);  //for testing
@@ -281,7 +280,7 @@ public class MainFrame extends Application {
     }
 
     public static void updateTimer(int seconds){
-
+        timer.cancel();
         timer = new Timer();
         mainTimerLabel.setText("Time Remaining:");
 
