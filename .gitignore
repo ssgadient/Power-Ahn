@@ -10,3 +10,5 @@ app/bin/main/powered_tasks/*
 
 .gradletasknamecache
 gradle-app.setting
+
+app/taskDB
