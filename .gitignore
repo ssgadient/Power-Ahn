@@ -6,6 +6,7 @@ build
 
 #Ignore binary files
 .class
+app/bin/main/powered_tasks/*
 
 .gradletasknamecache
 gradle-app.setting

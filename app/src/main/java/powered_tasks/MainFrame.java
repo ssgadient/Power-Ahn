@@ -16,8 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MainFrame extends Application {
+
+    static Text mainTimer = new Text("--:--:--");
+    static Text mainTimerLabel = new Text("Time until next task:");
+    static Timer timer = new Timer();
     Stage primaryStage = new Stage();
-    static Text mainTimer = new Text("");
 
     public static void openApp(String[] args) {
         launch(args);
@@ -30,12 +33,21 @@ public class MainFrame extends Application {
         t.setFont(Font.font ("Times New Roman", 20));
         t.setFill(Color.BLACK);
 
+        mainTimerLabel.setX(100); mainTimerLabel.setY(135);
+        mainTimerLabel.setFont(Font.font("Times New Roman", 40));
+        mainTimerLabel.setFill(Color.BLACK);
+
+        mainTimer.setX(95); mainTimer.setY(215);
+        mainTimer.setFont(Font.font("Times New Roman", 70));
+        mainTimer.setFill(Color.BLACK);
+
         Group root = new Group(t);
         List<Button> buttons = createButtons();
         for (Button b: buttons) {
             root.getChildren().add(b);
         }
         root.getChildren().add(mainTimer);
+        root.getChildren().add(mainTimerLabel);
         Scene background = new Scene(root, 1600, 800);
         background.setFill(Color.rgb(250, 225, 180));
 
@@ -49,7 +61,7 @@ public class MainFrame extends Application {
         List<Button> buttonList = new ArrayList<Button>();
 
         Button createTask = new Button("Create New Task");
-        createTask.setLayoutX(600); createTask.setLayoutY(400);
+        createTask.setLayoutX(100); createTask.setLayoutY(300);
         createTask.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -119,6 +131,7 @@ public class MainFrame extends Application {
                                     showMessage("End Time must come after start time", "error");
                                 }
                                 else {
+                                    timer.cancel();
                                     //System.out.println(appIDs);  //for testing
                                     String taskAppID = appIDs.get(appName);
                                     //System.out.println(taskAppID);  //for testing
@@ -184,7 +197,7 @@ public class MainFrame extends Application {
         buttonList.add(createTask);
 
         Button setTimer = new Button("Set Timer");
-        setTimer.setLayoutX(800); setTimer.setLayoutY(400);
+        setTimer.setLayoutX(215); setTimer.setLayoutY(300);
         setTimer.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -232,7 +245,8 @@ public class MainFrame extends Application {
                                 showMessage("Please enter\n positive integers", "error");
                             }
                             else {
-                                mainTimer = updateTimer(3600*Integer.parseInt(hours) + 60*Integer.parseInt(minutes) + Integer.parseInt(seconds));
+                                timer.cancel();
+                                updateTimer(3600*Integer.parseInt(hours) + 60*Integer.parseInt(minutes) + Integer.parseInt(seconds));
                                 start(primaryStage);
                                 setTimerStage.close();
                             }
@@ -266,59 +280,10 @@ public class MainFrame extends Application {
         errorStage.showAndWait();
     }
 
-    public static Text updateTimer(int seconds) {
-        Text timerText = new Text("");
-        Timer timer = new Timer();
+    public static void updateTimer(int seconds){
 
-        TimerTask timerTask = new TimerTask() {
-            public int innerSeconds = seconds;
-
-            @Override
-            public void run() {
-                int h = innerSeconds / 3600;
-                int m = (innerSeconds % 3600) / 60;
-                int s = innerSeconds % 60;
-                String hours = Integer.toString(h);
-                String minutes = Integer.toString(m);
-                String seconds = Integer.toString(s);
-                if (h < 10) {
-                    hours = "0" + h;
-                }
-                if (m < 10) {
-                    minutes = "0" + m;
-                }
-                if (s < 10) {
-                    seconds = "0" + s;
-                }
-                timerText.setText("" + hours + ":" + minutes + ":" + seconds);
-                setSeconds(getSeconds() - 1);
-                if (innerSeconds < 0) {
-                    timer.cancel();
-                }
-            }
-
-            public int getSeconds() {
-                return innerSeconds;
-            }
-
-            public void setSeconds(int innerSeconds) {
-                this.innerSeconds = innerSeconds;
-            }
-        };
-
-        timer.scheduleAtFixedRate(timerTask, 0, 1000);
-        timerText.setX(700); timerText.setY(200);
-        timerText.setFont(Font.font("Times New Roman", 60));
-        timerText.setFill(Color.GREEN);
-        return timerText;
-    }
-
-    public static void startTimerOnUI(LocalDateTime start, LocalDateTime end){
-        System.out.println(mainTimer);
-        System.out.println((int) Duration.between(start, end).getSeconds());
-        int seconds = (int) Duration.between(start, end).getSeconds();
-
-        Timer timer = new Timer();
+        timer = new Timer();
+        mainTimerLabel.setText("Time Remaining:");
 
         TimerTask timerTask = new TimerTask() {
             public int innerSeconds = seconds;
@@ -342,6 +307,15 @@ public class MainFrame extends Application {
                 }
                 mainTimer.setText("" + hours + ":" + minutes + ":" + seconds);
                 setSeconds(getSeconds() - 1);
+                if (innerSeconds >= 1799) {
+                    mainTimer.setFill(Color.GREEN);
+                }
+                else if (innerSeconds >= 599) {
+                    mainTimer.setFill(Color.ORANGE);
+                }
+                else {
+                    mainTimer.setFill(Color.RED);
+                }
                 if (innerSeconds < 0) {
                     timer.cancel();
                 }
@@ -357,12 +331,5 @@ public class MainFrame extends Application {
         };
 
         timer.scheduleAtFixedRate(timerTask, 0, 1000);
-
-
-        mainTimer.setX(700); mainTimer.setY(200);
-        mainTimer.setFont(Font.font("Times New Roman", 60));
-        mainTimer.setFill(Color.GREEN);
-
-        System.out.println(mainTimer);
     }
 }
