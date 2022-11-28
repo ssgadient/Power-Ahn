@@ -8,6 +8,7 @@ plugins {
   id("application")
   id("org.openjfx.javafxplugin") version "0.0.13"
   `java-library`
+  id("edu.sc.seis.launch4j") version "2.5.4"
 }
 
 repositories {
@@ -29,6 +30,11 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
+}
+
+launch4j {
+    outfile = "powered-tasks.exe"
+    mainClassName = "powered_tasks.App"
 }
 
 version = "1.2.1"

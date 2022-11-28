@@ -13,6 +13,7 @@ public class App {
         mbt.doStop();
         TaskDatabase.dropTable("Tasks");
         TaskDatabase.shutdownDatabase();
+        MainFrame.timer.cancel();
         System.out.println("App Closed.");
     }
 }
