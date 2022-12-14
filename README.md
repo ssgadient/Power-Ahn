@@ -1,4 +1,4 @@
-![App Preview](MP4Tube_Preview.png)
+![App Preview](app_images/Power-Ahn_Project_Preview_1)
 
 # Software Used
 - Java
