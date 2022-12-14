@@ -1,4 +1,4 @@
-![App Preview](app_images/Power_Ahn_Preview_2.png)
+![App Preview](app_images/Power_Ahn_Project_Preview_1.png)
 
 # Software Used
 - Java
@@ -19,6 +19,9 @@ Was there ever a time in which you weren’t buried in piles and piles of class 
 
 # How To Use
 Insert a task name, start time, end time, and system application name. When the start time arrives, the application will automatically open the provided system application (such as Visual Studio Code or Word) and set a timer to start counting down on the UI until the end time.
+
+![App Preview](app_images/Power_Ahn_Preview_2.png)
+![App Preview](app_images/Power_Ahn_Preview_3.png)
 
 
 # Next Steps
