@@ -1,4 +1,4 @@
-![App Preview](app_images/Power_Ahn_Project_Preview_1.png)
+![App Preview](app_images/Power-Ahn_Project_Preview_1.png)
 
 # Software Used
 - Java
